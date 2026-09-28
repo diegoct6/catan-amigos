@@ -5,16 +5,16 @@ La web usa Supabase para compartir partidas. La **Publishable Key** puede vivir 
 ## 1. Crear o actualizar la base de datos
 
 1. Abre el proyecto de Supabase y ve a **SQL Editor**.
-2. Ejecuta `supabase/schema.sql`.
+2. Ejecuta `supabase/schema.sql` para crear o actualizar el esquema.
 3. Recarga CATAN AMIGOS.
 
-El esquema contiene temporadas, jugadores, partidas, resultados, PV de CATAN, Score Amigos y vistas de clasificación. Las nuevas partidas se registran desde la web.
+El esquema contiene temporadas, jugadores, partidas, resultados, Puntos de Victoria de CATAN, Score Amigos y vistas de clasificación. Las nuevas partidas se registran desde la web.
 
-## 2. Datos históricos
+## 2. Cargar el histórico
 
-El histórico se carga una sola vez desde `supabase/seed-history.sql`; no hay importador de Excel en la web. El script reconoce las temporadas 1 y 2 y las 73 partidas. Su operación de conflicto usa el índice único parcial de `games.legacy_id`, y su comprobación final exige 73 partidas y 258 resultados sin borrar resultados existentes.
+Ejecuta `supabase/seed-history.sql` una vez en **SQL Editor**. El script puede repetirse: actualiza las partidas históricas por su `legacy_id` y reconstruye sus resultados de forma atómica. Carga las Temporadas 1 y 2, 73 partidas y 258 resultados desde el Excel. No hay importador de Excel en la web.
 
-**El archivo SQL del repositorio todavía no contiene las 258 filas de resultados. No lo ejecutes para cargar el histórico hasta completar y contrastar esas filas con `CATAN Stats 2025.xlsx`.** La fuente Excel no está disponible en esta conversación, por lo que la carga y validación del histórico están pendientes.
+El script incluye una comprobación que cancela la transacción si no encuentra las 73 partidas y los 258 resultados cargados. La clasificación ordena por Score Amigos promedio; los PV de CATAN se conservan como una estadística separada.
 
 ## Seguridad
 
