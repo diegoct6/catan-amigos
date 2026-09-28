@@ -217,7 +217,7 @@ function playerStats(pid,s){const rs=inScope(s).flatMap(g=>g.results.filter(r=>r
 const standings=s=>M.players.map(p=>playerStats(p.id,s)).filter(x=>x.k).sort((a,b)=>b.avg-a.avg||b.k-a.k||b.total-a.total);
 const wr=x=>x.k?100*x.w/x.k:0,lr=x=>x.k?100*x.last/x.k:0;
 function evoSeries(s){const L=standings(s),run={};L.forEach(x=>run[x.pid]={t:0,k:0});const out=L.map(x=>({c:res(x.pid),name:x.name,pid:x.pid,pts:[]}));
- inScope(s).forEach(g=>out.forEach(o=>{const r=g.results.find(r=>r.playerId==o.pid),u=run[o.pid];if(r){u.t+=scoreAmigos(g.results.length,r.position);u.k++}o.pts.push(u.k?u.t/u.k:null)}));return out}
+ inScope(s).forEach(g=>out.forEach(o=>{const r=g.results.find(r=>r.playerId==o.pid),u=run[o.pid];if(r){u.t+=scoreAmigos(g.results.length,r.position);u.k++}o.pts.push(r?u.t/u.k:null)}));return out}
 
 /* ---------- 4. PRESENTACIÓN ---------- */
 const RES=['brick','wool','water','grain','ore','wood'];
