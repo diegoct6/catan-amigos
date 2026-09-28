@@ -1,31 +1,49 @@
-# Configurar la base de datos de CATAN AMIGOS
+# Configurar CATAN AMIGOS
 
-La web ya está conectada al proyecto Supabase mediante la **Publishable Key**. Esa clave puede vivir en el frontend; la seguridad depende de RLS y de los permisos de la base de datos. No uses nunca una `sb_secret_...` en este repositorio.
+La web usa Supabase para compartir partidas entre todos los móviles. La **Publishable Key** puede vivir en el frontend; la seguridad depende de RLS y de las funciones validadas. Nunca uses una `sb_secret_...` ni una `service_role` en este repositorio.
 
-## Un único paso inicial
+## 1. Crear la base de datos
 
-1. Abre el proyecto de Supabase.
+1. Abre tu proyecto de Supabase.
 2. Ve a **SQL Editor**.
-3. Crea una nueva consulta.
-4. Abre `supabase/schema.sql` de este repositorio y copia todo su contenido.
-5. Ejecuta el SQL.
-6. Vuelve a la web y pulsa **Actualizar**.
+3. Crea una consulta nueva.
+4. Abre `supabase/schema.sql` en este repositorio.
+5. Copia todo el contenido y ejecútalo.
+6. Recarga CATAN AMIGOS.
 
-El script crea:
+El esquema crea:
 
-- temporadas
-- jugadores
-- partidas
-- resultados por jugador
-- cálculo centralizado de Score Amigos
-- función atómica para registrar partidas
-- RLS y permisos para el frontend público
-- `Temporada 2026` si todavía no existe ninguna temporada
+- temporadas y jugadores
+- partidas y resultados por jugador
+- puntos de victoria del juego
+- Score Amigos calculado centralmente
+- ranking por Score Amigos promedio, igual que el Excel histórico
+- victorias, últimos puestos, porcentajes y posición media
+- clasificación de temporada y clasificación histórica
+- registro atómico de partidas
+- función segura para importar partidas con su ID histórico
+- RLS y permisos mínimos para el frontend público
 
-## Después
+## 2. Importar el Excel histórico
 
-Añade los jugadores reales desde **Ranking → + Jugador**. Después podremos importar el histórico del Excel sin introducir las partidas una por una.
+No hace falta convertir el Excel a SQL.
+
+En CATAN AMIGOS ve a **Más → Importar Excel** y selecciona vuestro `CATAN Stats 2025.xlsx`.
+
+El importador reconoce las hojas `Partidas` y `Detalle` y conserva:
+
+- Temporadas
+- ID de partida
+- Fecha
+- Número de jugadores
+- Jugador
+- Puesto final
+- Puntos de victoria
+
+La importación usa el ID histórico de partida, por lo que repetir el mismo Excel no debería crear partidas duplicadas.
 
 ## Seguridad
 
-El repositorio es público y la Publishable Key también será visible en el navegador. Esto es normal para una aplicación frontend de Supabase. La clave no es un secreto; RLS debe ser quien limite el acceso. Nunca pongas en el repositorio una `sb_secret_...` o una antigua `service_role`.
+El repositorio es público y la Publishable Key será visible en el navegador. Eso es normal en una aplicación frontend de Supabase. La Publishable Key no sustituye a RLS: las tablas deben mantener RLS habilitado y las escrituras de partidas pasan por funciones validadas.
+
+Nunca publiques una `sb_secret_...` o una antigua `service_role`.
