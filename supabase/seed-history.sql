@@ -243,7 +243,7 @@ on conflict (legacy_id) where legacy_id is not null do update set season_id=excl
 -- Do not delete existing result rows. The import can be rerun safely.
 -- The source workbook rows must be present in game_results before this
 -- transaction can commit; this guard prevents a partial historical seed.
-do $
+do $seed_guard$
 declare
   v_games integer;
   v_results integer;
@@ -253,4 +253,4 @@ begin
   if v_games <> 73 or v_results <> 258 then
     raise exception 'Historical seed incomplete: expected 73 games and 258 results, found % games and % results. Restore the workbook result rows before running this script.', v_games, v_results;
   end if;
-end $;
+end $seed_guard$;
