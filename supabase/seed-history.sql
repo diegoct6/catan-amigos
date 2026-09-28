@@ -7,7 +7,7 @@ begin;
 insert into public.seasons (name,is_active) values
 ('1 · 12 jun – 26 jun 2025', false),
 ('2 · 3 jul – 25 sep 2025', true)
-on conflict (name) do nothing;
+on conflict (name) do update set is_active=excluded.is_active;
 
 -- Jugadores históricos.
 insert into public.players (name) values
@@ -18,239 +18,367 @@ insert into public.players (name) values
 ('Nathalia Gutiérrez')
 on conflict (name) do nothing;
 
+-- Load all 73 workbook games using the schema's partial unique index.
 insert into public.games (legacy_id, season_id, played_at, player_count)
-select 1, id, '2025-06-12', 4 from public.seasons where name = '1 · 12 jun – 26 jun 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 2, id, '2025-06-12', 5 from public.seasons where name = '1 · 12 jun – 26 jun 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 3, id, '2025-06-12', 4 from public.seasons where name = '1 · 12 jun – 26 jun 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 4, id, '2025-06-13', 4 from public.seasons where name = '1 · 12 jun – 26 jun 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 5, id, '2025-06-13', 4 from public.seasons where name = '1 · 12 jun – 26 jun 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 6, id, '2025-06-13', 4 from public.seasons where name = '1 · 12 jun – 26 jun 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 7, id, '2025-06-14', 4 from public.seasons where name = '1 · 12 jun – 26 jun 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 8, id, '2025-06-14', 5 from public.seasons where name = '1 · 12 jun – 26 jun 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 9, id, '2025-06-14', 4 from public.seasons where name = '1 · 12 jun – 26 jun 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 10, id, '2025-06-14', 5 from public.seasons where name = '1 · 12 jun – 26 jun 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 11, id, '2025-06-14', 4 from public.seasons where name = '1 · 12 jun – 26 jun 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 12, id, '2025-06-15', 4 from public.seasons where name = '1 · 12 jun – 26 jun 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 13, id, '2025-06-15', 4 from public.seasons where name = '1 · 12 jun – 26 jun 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 14, id, '2025-06-15', 4 from public.seasons where name = '1 · 12 jun – 26 jun 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 15, id, '2025-06-15', 4 from public.seasons where name = '1 · 12 jun – 26 jun 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 16, id, '2025-06-16', 4 from public.seasons where name = '1 · 12 jun – 26 jun 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 17, id, '2025-06-16', 4 from public.seasons where name = '1 · 12 jun – 26 jun 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 18, id, '2025-06-16', 4 from public.seasons where name = '1 · 12 jun – 26 jun 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 19, id, '2025-06-17', 4 from public.seasons where name = '1 · 12 jun – 26 jun 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 20, id, '2025-06-17', 4 from public.seasons where name = '1 · 12 jun – 26 jun 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 21, id, '2025-06-18', 4 from public.seasons where name = '1 · 12 jun – 26 jun 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 22, id, '2025-06-18', 4 from public.seasons where name = '1 · 12 jun – 26 jun 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 23, id, '2025-06-19', 4 from public.seasons where name = '1 · 12 jun – 26 jun 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 24, id, '2025-06-20', 4 from public.seasons where name = '1 · 12 jun – 26 jun 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 25, id, '2025-06-20', 4 from public.seasons where name = '1 · 12 jun – 26 jun 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 26, id, '2025-06-21', 4 from public.seasons where name = '1 · 12 jun – 26 jun 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 27, id, '2025-06-25', 4 from public.seasons where name = '1 · 12 jun – 26 jun 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 28, id, '2025-06-26', 4 from public.seasons where name = '1 · 12 jun – 26 jun 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
+select src.legacy_id, s.id, src.played_at::date, src.player_count
+from (values
+  (1, '2025-06-12', 4, 1),
+  (2, '2025-06-12', 5, 1),
+  (3, '2025-06-12', 4, 1),
+  (4, '2025-06-13', 4, 1),
+  (5, '2025-06-13', 4, 1),
+  (6, '2025-06-17', 5, 1),
+  (7, '2025-06-17', 4, 1),
+  (8, '2025-06-17', 5, 1),
+  (9, '2025-06-18', 4, 1),
+  (10, '2025-06-18', 3, 1),
+  (11, '2025-06-19', 4, 1),
+  (12, '2025-06-19', 5, 1),
+  (13, '2025-06-20', 3, 1),
+  (14, '2025-06-20', 3, 1),
+  (15, '2025-06-20', 3, 1),
+  (16, '2025-06-20', 3, 1),
+  (17, '2025-06-21', 3, 1),
+  (18, '2025-06-22', 4, 1),
+  (19, '2025-06-23', 4, 1),
+  (20, '2025-06-23', 4, 1),
+  (21, '2025-06-23', 4, 1),
+  (22, '2025-06-23', 5, 1),
+  (23, '2025-06-25', 4, 1),
+  (24, '2025-06-25', 4, 1),
+  (25, '2025-06-25', 3, 1),
+  (26, '2025-06-26', 3, 1),
+  (27, '2025-06-26', 4, 1),
+  (28, '2025-06-26', 3, 1),
+  (29, '2025-07-03', 4, 2),
+  (30, '2025-07-03', 3, 2),
+  (31, '2025-07-05', 3, 2),
+  (32, '2025-07-05', 3, 2),
+  (33, '2025-07-08', 3, 2),
+  (34, '2025-07-08', 3, 2),
+  (35, '2025-07-08', 3, 2),
+  (36, '2025-07-17', 3, 2),
+  (37, '2025-07-18', 4, 2),
+  (38, '2025-07-18', 4, 2),
+  (39, '2025-07-18', 4, 2),
+  (40, '2025-07-18', 3, 2),
+  (41, '2025-08-05', 3, 2),
+  (42, '2025-08-05', 3, 2),
+  (43, '2025-08-05', 3, 2),
+  (44, '2025-08-07', 3, 2),
+  (45, '2025-08-07', 3, 2),
+  (46, '2025-08-11', 3, 2),
+  (47, '2025-08-11', 3, 2),
+  (48, '2025-08-14', 3, 2),
+  (49, '2025-08-14', 3, 2),
+  (50, '2025-08-14', 4, 2),
+  (51, '2025-08-18', 3, 2),
+  (52, '2025-08-18', 3, 2),
+  (53, '2025-08-21', 3, 2),
+  (54, '2025-08-21', 4, 2),
+  (55, '2025-08-21', 4, 2),
+  (56, '2025-08-22', 4, 2),
+  (57, '2025-08-22', 4, 2),
+  (58, '2025-08-22', 3, 2),
+  (59, '2025-08-25', 3, 2),
+  (60, '2025-08-25', 3, 2),
+  (61, '2025-08-27', 3, 2),
+  (62, '2025-08-27', 4, 2),
+  (63, '2025-08-27', 3, 2),
+  (64, '2025-08-29', 4, 2),
+  (65, '2025-08-29', 4, 2),
+  (66, '2025-08-29', 3, 2),
+  (67, '2025-08-29', 4, 2),
+  (68, '2025-08-29', 4, 2),
+  (69, '2025-08-29', 4, 2),
+  (70, '2025-08-29', 3, 2),
+  (71, '2025-09-01', 3, 2),
+  (72, '2025-09-24', 3, 2),
+  (73, '2025-09-25', 3, 2)
+) as src(legacy_id, played_at, player_count, season_number)
+join public.seasons s on s.name = case src.season_number when 1 then '1 · 12 jun – 26 jun 2025' when 2 then '2 · 3 jul – 25 sep 2025' end
+on conflict (legacy_id) where legacy_id is not null do update
+set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
 
--- Temporada 2: 45 partidas.
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 29, id, '2025-07-03', 4 from public.seasons where name = '2 · 3 jul – 25 sep 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 30, id, '2025-07-03', 4 from public.seasons where name = '2 · 3 jul – 25 sep 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 31, id, '2025-07-04', 4 from public.seasons where name = '2 · 3 jul – 25 sep 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 32, id, '2025-07-04', 4 from public.seasons where name = '2 · 3 jul – 25 sep 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 33, id, '2025-07-05', 4 from public.seasons where name = '2 · 3 jul – 25 sep 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 34, id, '2025-07-05', 4 from public.seasons where name = '2 · 3 jul – 25 sep 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 35, id, '2025-07-05', 4 from public.seasons where name = '2 · 3 jul – 25 sep 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 36, id, '2025-07-05', 4 from public.seasons where name = '2 · 3 jul – 25 sep 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 37, id, '2025-07-06', 4 from public.seasons where name = '2 · 3 jul – 25 sep 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 38, id, '2025-07-06', 4 from public.seasons where name = '2 · 3 jul – 25 sep 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 39, id, '2025-07-07', 4 from public.seasons where name = '2 · 3 jul – 25 sep 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 40, id, '2025-07-07', 4 from public.seasons where name = '2 · 3 jul – 25 sep 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 41, id, '2025-07-10', 4 from public.seasons where name = '2 · 3 jul – 25 sep 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 42, id, '2025-07-10', 4 from public.seasons where name = '2 · 3 jul – 25 sep 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 43, id, '2025-07-11', 4 from public.seasons where name = '2 · 3 jul – 25 sep 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 44, id, '2025-07-11', 4 from public.seasons where name = '2 · 3 jul – 25 sep 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 45, id, '2025-07-12', 4 from public.seasons where name = '2 · 3 jul – 25 sep 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 46, id, '2025-07-12', 4 from public.seasons where name = '2 · 3 jul – 25 sep 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 47, id, '2025-07-13', 4 from public.seasons where name = '2 · 3 jul – 25 sep 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 48, id, '2025-07-13', 4 from public.seasons where name = '2 · 3 jul – 25 sep 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 49, id, '2025-07-14', 4 from public.seasons where name = '2 · 3 jul – 25 sep 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 50, id, '2025-07-14', 4 from public.seasons where name = '2 · 3 jul – 25 sep 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 51, id, '2025-07-15', 4 from public.seasons where name = '2 · 3 jul – 25 sep 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 52, id, '2025-07-15', 4 from public.seasons where name = '2 · 3 jul – 25 sep 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 53, id, '2025-07-16', 4 from public.seasons where name = '2 · 3 jul – 25 sep 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 54, id, '2025-07-17', 4 from public.seasons where name = '2 · 3 jul – 25 sep 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 55, id, '2025-07-17', 4 from public.seasons where name = '2 · 3 jul – 25 sep 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 56, id, '2025-07-18', 4 from public.seasons where name = '2 · 3 jul – 25 sep 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 57, id, '2025-07-18', 4 from public.seasons where name = '2 · 3 jul – 25 sep 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 58, id, '2025-07-19', 4 from public.seasons where name = '2 · 3 jul – 25 sep 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 59, id, '2025-07-20', 4 from public.seasons where name = '2 · 3 jul – 25 sep 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 60, id, '2025-07-24', 4 from public.seasons where name = '2 · 3 jul – 25 sep 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 61, id, '2025-07-24', 4 from public.seasons where name = '2 · 3 jul – 25 sep 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 62, id, '2025-07-25', 4 from public.seasons where name = '2 · 3 jul – 25 sep 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 63, id, '2025-07-25', 4 from public.seasons where name = '2 · 3 jul – 25 sep 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 64, id, '2025-07-26', 4 from public.seasons where name = '2 · 3 jul – 25 sep 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 65, id, '2025-07-26', 4 from public.seasons where name = '2 · 3 jul – 25 sep 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 66, id, '2025-07-27', 4 from public.seasons where name = '2 · 3 jul – 25 sep 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 67, id, '2025-08-01', 4 from public.seasons where name = '2 · 3 jul – 25 sep 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 68, id, '2025-08-02', 4 from public.seasons where name = '2 · 3 jul – 25 sep 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 69, id, '2025-08-03', 4 from public.seasons where name = '2 · 3 jul – 25 sep 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 70, id, '2025-09-18', 4 from public.seasons where name = '2 · 3 jul – 25 sep 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 71, id, '2025-09-18', 4 from public.seasons where name = '2 · 3 jul – 25 sep 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 72, id, '2025-09-25', 4 from public.seasons where name = '2 · 3 jul – 25 sep 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
-insert into public.games (legacy_id, season_id, played_at, player_count)
-select 73, id, '2025-09-25', 4 from public.seasons where name = '2 · 3 jul – 25 sep 2025'
-on conflict (legacy_id) where legacy_id is not null do update set season_id=excluded.season_id, played_at=excluded.played_at, player_count=excluded.player_count;
+-- Replace results only for these historical game IDs, then reload the source rows.
+delete from public.game_results
+where game_id in (select id from public.games where legacy_id between 1 and 73);
 
--- Do not delete existing result rows. The import can be rerun safely.
--- The source workbook rows must be present in game_results before this
--- transaction can commit; this guard prevents a partial historical seed.
+insert into public.game_results (game_id, player_id, position, victory_points)
+select g.id, p.id, src.position, src.victory_points
+from (values
+  (1, U&'David Rubio', 2, 8),
+  (1, U&'Camila Espinosa', 3, 8),
+  (1, U&'Diego Cuartas', 1, 10),
+  (1, U&'Carlos Morales', 4, 7),
+  (2, U&'David Rubio', 3, 6),
+  (2, U&'Camila Espinosa', 5, 3),
+  (2, U&'Diego Cuartas', 2, 8),
+  (2, U&'Nathalia Guti\00e9rrez', 1, 10),
+  (2, U&'Carlos Morales', 4, 4),
+  (3, U&'David Rubio', 2, 7),
+  (3, U&'Camila Espinosa', 3, 6),
+  (3, U&'Diego Cuartas', 1, 10),
+  (3, U&'Carlos Morales', 4, 4),
+  (4, U&'David Rubio', 2, 9),
+  (4, U&'Camila Espinosa', 4, 7),
+  (4, U&'Diego Cuartas', 1, 10),
+  (4, U&'Carlos Morales', 3, 9),
+  (5, U&'David Rubio', 4, 6),
+  (5, U&'Camila Espinosa', 3, 7),
+  (5, U&'Diego Cuartas', 2, 7),
+  (5, U&'Carlos Morales', 1, 10),
+  (6, U&'David Rubio', 1, 10),
+  (6, U&'Camila Espinosa', 3, 6),
+  (6, U&'Diego Cuartas', 5, 5),
+  (6, U&'Nathalia Guti\00e9rrez', 4, 5),
+  (6, U&'Carlos Morales', 2, 7),
+  (7, U&'David Rubio', 4, 4),
+  (7, U&'Camila Espinosa', 3, 4),
+  (7, U&'Diego Cuartas', 1, 10),
+  (7, U&'Nathalia Guti\00e9rrez', 2, 6),
+  (8, U&'David Rubio', 3, 5),
+  (8, U&'Camila Espinosa', 2, 7),
+  (8, U&'Diego Cuartas', 1, 10),
+  (8, U&'Nathalia Guti\00e9rrez', 5, 4),
+  (8, U&'Carlos Morales', 4, 5),
+  (9, U&'David Rubio', 2, 7),
+  (9, U&'Camila Espinosa', 1, 10),
+  (9, U&'Diego Cuartas', 4, 5),
+  (9, U&'Carlos Morales', 3, 7),
+  (10, U&'David Rubio', 2, 7),
+  (10, U&'Camila Espinosa', 3, 5),
+  (10, U&'Diego Cuartas', 1, 10),
+  (11, U&'David Rubio', 4, 6),
+  (11, U&'Camila Espinosa', 1, 10),
+  (11, U&'Diego Cuartas', 3, 8),
+  (11, U&'Nathalia Guti\00e9rrez', 2, 8),
+  (12, U&'David Rubio', 1, 10),
+  (12, U&'Camila Espinosa', 4, 7),
+  (12, U&'Diego Cuartas', 5, 7),
+  (12, U&'Nathalia Guti\00e9rrez', 2, 8),
+  (12, U&'Carlos Morales', 3, 8),
+  (13, U&'David Rubio', 3, 7),
+  (13, U&'Carlos Morales', 1, 10),
+  (13, U&'Nathalia Guti\00e9rrez', 2, 8),
+  (14, U&'David Rubio', 2, 6),
+  (14, U&'Carlos Morales', 3, 6),
+  (14, U&'Nathalia Guti\00e9rrez', 1, 10),
+  (15, U&'David Rubio', 1, 10),
+  (15, U&'Camila Espinosa', 2, 7),
+  (15, U&'Diego Cuartas', 3, 7),
+  (16, U&'David Rubio', 3, 4),
+  (16, U&'Camila Espinosa', 1, 10),
+  (16, U&'Diego Cuartas', 2, 6),
+  (17, U&'David Rubio', 3, 4),
+  (17, U&'Camila Espinosa', 1, 10),
+  (17, U&'Carlos Morales', 2, 7),
+  (18, U&'David Rubio', 1, 10),
+  (18, U&'Camila Espinosa', 3, 7),
+  (18, U&'Diego Cuartas', 2, 9),
+  (18, U&'Nathalia Guti\00e9rrez', 4, 7),
+  (19, U&'David Rubio', 2, 6),
+  (19, U&'Camila Espinosa', 1, 10),
+  (19, U&'Carlos Morales', 3, 4),
+  (19, U&'Nathalia Guti\00e9rrez', 4, 3),
+  (20, U&'David Rubio', 1, 10),
+  (20, U&'Camila Espinosa', 2, 6),
+  (20, U&'Carlos Morales', 4, 4),
+  (20, U&'Nathalia Guti\00e9rrez', 3, 4),
+  (21, U&'David Rubio', 1, 10),
+  (21, U&'Camila Espinosa', 4, 5),
+  (21, U&'Carlos Morales', 2, 6),
+  (21, U&'Nathalia Guti\00e9rrez', 3, 5),
+  (22, U&'David Rubio', 2, 7),
+  (22, U&'Camila Espinosa', 3, 7),
+  (22, U&'Diego Cuartas', 5, 5),
+  (22, U&'Nathalia Guti\00e9rrez', 4, 6),
+  (22, U&'Carlos Morales', 1, 10),
+  (23, U&'David Rubio', 1, 10),
+  (23, U&'Diego Cuartas', 4, 5),
+  (23, U&'Carlos Morales', 3, 7),
+  (23, U&'Nathalia Guti\00e9rrez', 2, 9),
+  (24, U&'David Rubio', 1, 10),
+  (24, U&'Diego Cuartas', 4, 5),
+  (24, U&'Carlos Morales', 3, 8),
+  (24, U&'Nathalia Guti\00e9rrez', 2, 9),
+  (25, U&'David Rubio', 1, 10),
+  (25, U&'Camila Espinosa', 3, 6),
+  (25, U&'Diego Cuartas', 2, 8),
+  (26, U&'David Rubio', 2, 9),
+  (26, U&'Camila Espinosa', 1, 10),
+  (26, U&'Carlos Morales', 3, 8),
+  (27, U&'David Rubio', 1, 10),
+  (27, U&'Camila Espinosa', 3, 6),
+  (27, U&'Carlos Morales', 2, 7),
+  (27, U&'Nathalia Guti\00e9rrez', 4, 6),
+  (28, U&'David Rubio', 1, 10),
+  (28, U&'Nathalia Guti\00e9rrez', 2, 7),
+  (28, U&'Carlos Morales', 3, 6),
+  (29, U&'David Rubio', 2, 9),
+  (29, U&'Camila Espinosa', 3, 8),
+  (29, U&'Carlos Morales', 4, 8),
+  (29, U&'Diego Cuartas', 1, 10),
+  (30, U&'Camila Espinosa', 2, 9),
+  (30, U&'Diego Cuartas', 1, 10),
+  (30, U&'Carlos Morales', 3, 9),
+  (31, U&'David Rubio', 1, 10),
+  (31, U&'Camila Espinosa', 2, 6),
+  (31, U&'Carlos Morales', 3, 5),
+  (32, U&'David Rubio', 3, 6),
+  (32, U&'Camila Espinosa', 1, 10),
+  (32, U&'Diego Cuartas', 2, 6),
+  (33, U&'David Rubio', 1, 10),
+  (33, U&'Camila Espinosa', 2, 8),
+  (33, U&'Carlos Morales', 3, 6),
+  (34, U&'Carlos Morales', 1, 10),
+  (34, U&'Camila Espinosa', 2, 7),
+  (34, U&'David Rubio', 3, 7),
+  (35, U&'David Rubio', 1, 10),
+  (35, U&'Camila Espinosa', 2, 9),
+  (35, U&'Carlos Morales', 3, 8),
+  (36, U&'David Rubio', 1, 10),
+  (36, U&'Camila Espinosa', 3, 6),
+  (36, U&'Carlos Morales', 2, 7),
+  (37, U&'David Rubio', 3, 6),
+  (37, U&'Camila Espinosa', 2, 7),
+  (37, U&'Carlos Morales', 1, 10),
+  (37, U&'Diego Cuartas', 4, 6),
+  (38, U&'David Rubio', 4, 5),
+  (38, U&'Camila Espinosa', 3, 8),
+  (38, U&'Carlos Morales', 2, 9),
+  (38, U&'Diego Cuartas', 1, 10),
+  (39, U&'David Rubio', 3, 6),
+  (39, U&'Camila Espinosa', 2, 6),
+  (39, U&'Carlos Morales', 4, 5),
+  (39, U&'Diego Cuartas', 1, 10),
+  (40, U&'David Rubio', 1, 10),
+  (40, U&'Diego Cuartas', 3, 7),
+  (40, U&'Carlos Morales', 2, 7),
+  (41, U&'David Rubio', 1, 10),
+  (41, U&'Camila Espinosa', 2, 6),
+  (41, U&'Carlos Morales', 3, 5),
+  (42, U&'David Rubio', 1, 10),
+  (42, U&'Camila Espinosa', 3, 4),
+  (42, U&'Carlos Morales', 2, 5),
+  (43, U&'David Rubio', 1, 10),
+  (43, U&'Camila Espinosa', 3, 7),
+  (43, U&'Carlos Morales', 2, 9),
+  (44, U&'David Rubio', 3, 8),
+  (44, U&'Camila Espinosa', 2, 9),
+  (44, U&'Carlos Morales', 1, 10),
+  (45, U&'David Rubio', 3, 5),
+  (45, U&'Camila Espinosa', 1, 10),
+  (45, U&'Carlos Morales', 2, 7),
+  (46, U&'David Rubio', 2, 9),
+  (46, U&'Camila Espinosa', 1, 10),
+  (46, U&'Diego Cuartas', 3, 8),
+  (47, U&'David Rubio', 1, 10),
+  (47, U&'Camila Espinosa', 2, 7),
+  (47, U&'Diego Cuartas', 3, 7),
+  (48, U&'David Rubio', 3, 6),
+  (48, U&'Camila Espinosa', 2, 7),
+  (48, U&'Nathalia Guti\00e9rrez', 1, 10),
+  (49, U&'David Rubio', 2, 7),
+  (49, U&'Camila Espinosa', 1, 10),
+  (49, U&'Nathalia Guti\00e9rrez', 3, 5),
+  (50, U&'David Rubio', 2, 6),
+  (50, U&'Camila Espinosa', 4, 3),
+  (50, U&'Nathalia Guti\00e9rrez', 3, 6),
+  (50, U&'Diego Cuartas', 1, 10),
+  (51, U&'David Rubio', 1, 10),
+  (51, U&'Camila Espinosa', 3, 7),
+  (51, U&'Nathalia Guti\00e9rrez', 2, 9),
+  (52, U&'David Rubio', 3, 5),
+  (52, U&'Carlos Morales', 2, 7),
+  (52, U&'Nathalia Guti\00e9rrez', 1, 10),
+  (53, U&'David Rubio', 2, 6),
+  (53, U&'Diego Cuartas', 1, 10),
+  (53, U&'Nathalia Guti\00e9rrez', 3, 5),
+  (54, U&'David Rubio', 1, 10),
+  (54, U&'Carlos Morales', 2, 9),
+  (54, U&'Nathalia Guti\00e9rrez', 3, 8),
+  (54, U&'Diego Cuartas', 4, 4),
+  (55, U&'David Rubio', 3, 5),
+  (55, U&'Carlos Morales', 4, 4),
+  (55, U&'Nathalia Guti\00e9rrez', 2, 7),
+  (55, U&'Diego Cuartas', 1, 10),
+  (56, U&'Camila Espinosa', 3, 5),
+  (56, U&'Nathalia Guti\00e9rrez', 2, 7),
+  (56, U&'Diego Cuartas', 1, 10),
+  (56, U&'Carlos Morales', 4, 5),
+  (57, U&'Camila Espinosa', 2, 6),
+  (57, U&'Nathalia Guti\00e9rrez', 4, 3),
+  (57, U&'Diego Cuartas', 3, 6),
+  (57, U&'David Rubio', 1, 10),
+  (58, U&'Camila Espinosa', 2, 8),
+  (58, U&'Diego Cuartas', 3, 6),
+  (58, U&'Nathalia Guti\00e9rrez', 1, 10),
+  (59, U&'Camila Espinosa', 3, 7),
+  (59, U&'Diego Cuartas', 2, 8),
+  (59, U&'Nathalia Guti\00e9rrez', 1, 10),
+  (60, U&'Camila Espinosa', 2, 6),
+  (60, U&'Diego Cuartas', 1, 10),
+  (60, U&'Nathalia Guti\00e9rrez', 3, 5),
+  (61, U&'David Rubio', 2, 8),
+  (61, U&'Carlos Morales', 1, 10),
+  (61, U&'Nathalia Guti\00e9rrez', 3, 7),
+  (62, U&'David Rubio', 1, 10),
+  (62, U&'Nathalia Guti\00e9rrez', 2, 5),
+  (62, U&'Diego Cuartas', 4, 2),
+  (62, U&'Carlos Morales', 3, 5),
+  (63, U&'David Rubio', 3, 7),
+  (63, U&'Camila Espinosa', 2, 8),
+  (63, U&'Nathalia Guti\00e9rrez', 1, 10),
+  (64, U&'David Rubio', 3, 6),
+  (64, U&'Nathalia Guti\00e9rrez', 2, 9),
+  (64, U&'Diego Cuartas', 4, 5),
+  (64, U&'Camila Espinosa', 1, 10),
+  (65, U&'David Rubio', 1, 10),
+  (65, U&'Nathalia Guti\00e9rrez', 3, 6),
+  (65, U&'Diego Cuartas', 4, 3),
+  (65, U&'Camila Espinosa', 2, 9),
+  (66, U&'Diego Cuartas', 3, 7),
+  (66, U&'Camila Espinosa', 1, 10),
+  (66, U&'Nathalia Guti\00e9rrez', 2, 7),
+  (67, U&'David Rubio', 2, 8),
+  (67, U&'Nathalia Guti\00e9rrez', 4, 7),
+  (67, U&'Diego Cuartas', 3, 8),
+  (67, U&'Camila Espinosa', 1, 10),
+  (68, U&'David Rubio', 1, 10),
+  (68, U&'Nathalia Guti\00e9rrez', 4, 4),
+  (68, U&'Diego Cuartas', 2, 5),
+  (68, U&'Camila Espinosa', 3, 4),
+  (69, U&'David Rubio', 2, 9),
+  (69, U&'Nathalia Guti\00e9rrez', 4, 6),
+  (69, U&'Diego Cuartas', 3, 9),
+  (69, U&'Camila Espinosa', 1, 10),
+  (70, U&'Diego Cuartas', 1, 10),
+  (70, U&'Camila Espinosa', 2, 7),
+  (70, U&'David Rubio', 3, 5),
+  (71, U&'Diego Cuartas', 2, 8),
+  (71, U&'Camila Espinosa', 3, 7),
+  (71, U&'David Rubio', 1, 10),
+  (72, U&'Diego Cuartas', 2, 6),
+  (72, U&'Nathalia Guti\00e9rrez', 1, 10),
+  (72, U&'David Rubio', 3, 6),
+  (73, U&'Diego Cuartas', 3, 7),
+  (73, U&'Camila Espinosa', 2, 8),
+  (73, U&'David Rubio', 1, 10)
+) as src(legacy_id, player_name, position, victory_points)
+join public.games g on g.legacy_id=src.legacy_id
+join public.players p on p.name=src.player_name;
+
 do $seed_guard$
 declare
   v_games integer;
   v_results integer;
 begin
   select count(*) into v_games from public.games where legacy_id between 1 and 73;
-  select count(*) into v_results from public.game_results gr join public.games g on g.id = gr.game_id where g.legacy_id between 1 and 73;
+  select count(*) into v_results from public.game_results gr join public.games g on g.id=gr.game_id where g.legacy_id between 1 and 73;
   if v_games <> 73 or v_results <> 258 then
-    raise exception 'Historical seed incomplete: expected 73 games and 258 results, found % games and % results. Restore the workbook result rows before running this script.', v_games, v_results;
+    raise exception 'Historical seed mismatch: expected 73 games and 258 results; found % games and % results.', v_games, v_results;
   end if;
 end $seed_guard$;
+
+COMMIT;
