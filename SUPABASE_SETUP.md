@@ -19,3 +19,13 @@ El script incluye una comprobación que cancela la transacción si no encuentra 
 ## Seguridad
 
 La Publishable Key es visible en el navegador; eso es normal en una aplicación frontend de Supabase. Mantén RLS habilitado y las escrituras de partidas mediante funciones validadas. Nunca publiques una `sb_secret_...` ni una clave antigua `service_role`.
+
+## Borrar temporadas (solo administración)
+
+La web solo muestra la acción de borrar a una cuenta autenticada con el rol `admin`. Para habilitarla:
+
+1. Ejecuta `supabase/admin-delete-season.sql` en el SQL Editor. La función borra la temporada; el esquema elimina en cascada sus partidas y resultados.
+2. En **Authentication → Users**, abre la cuenta administradora y asigna en **App Metadata** el rol `{"role":"admin"}`. App Metadata solo la puede cambiar un administrador de Supabase.
+3. En CATAN Amigos, entra a **Temporadas → Acceso de administrador** y solicita el enlace de acceso al correo autorizado.
+
+Las cuentas autenticadas sin ese rol no pueden borrar temporadas. La confirmación de la web indica cuántas partidas y resultados se eliminarán.
