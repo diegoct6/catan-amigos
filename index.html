@@ -178,7 +178,7 @@ dialog::backdrop{background:rgba(40,8,14,.72)}dialog h3{font-size:1.7rem;margin-
 <nav id="nav"><a href="#/">Inicio</a><a href="#/temporadas">Temporadas</a><a href="#/historico">Histórico</a><a href="#/partidas">Partidas</a><a href="#/estadisticas">Estadísticas</a><a href="#/jugadores">Jugadores</a><a href="#/reglas">Reglas</a><a class="cta" href="#/registrar">Registrar partida</a></nav></div></header>
 <main class="wrap" id="app"></main>
 <footer><div class="wrap"><div class="road"></div>La historia de nuestra mesa. Cada partida cuenta.</div></footer>
-<dialog id="sdlg"><h3>Nueva temporada</h3><p class="sub" style="margin:0 0 14px">Asigna un nombre y las fechas que definen esta etapa.</p><div class="form" style="padding:0"><label>Modalidad<select id="sv" aria-label="Modalidad de la temporada"><option value="normal">Normal</option><option value="navegantes">Navegantes</option><option value="ck">C&amp;K</option></select></label><label>Nombre de la temporada<input id="sn" maxlength="67" placeholder="Ej. Temporada 3 o Torneo de otoño" required></label><label>Fecha de inicio<input id="sstart" type="date" required></label><label>Fecha de fin<input id="send" type="date" required></label><p class="sub">El nombre es libre, sin formato especial. Las dos fechas son obligatorias. Crear otra temporada no modifica las fechas de esta.</p><div class="err" id="serr" role="alert"></div><div class="acts"><button class="btn ghost" onclick="sdlg.close()" type="button">Cancelar</button><button class="btn" onclick="addSeason()" type="button" data-write disabled>Crear temporada</button></div></div></dialog>
+<dialog id="sdlg"><h3>Nueva temporada</h3><p class="sub" style="margin:0 0 14px">Elige la modalidad y el nombre de esta etapa.</p><div class="form" style="padding:0"><label>Modalidad<select id="sv" aria-label="Modalidad de la temporada"><option value="normal">Normal</option><option value="navegantes">Navegantes</option><option value="ck">C&amp;K</option></select></label><label>Nombre de la temporada<input id="sn" maxlength="67" placeholder="Ej. Temporada 3 o Torneo de otoño" required></label><p class="sub">La modalidad se añadirá al nombre. Las fechas se mostrarán según las partidas registradas.</p><div class="err" id="serr" role="alert"></div><div class="acts"><button class="btn ghost" onclick="sdlg.close()" type="button">Cancelar</button><button class="btn" onclick="addSeason()" type="button" data-write disabled>Crear temporada</button></div></div></dialog>
 
 
 <dialog id="dlg"><h3>¿Eliminar esta partida?</h3><p class="sub" style="margin:0">Se borrará esta partida y los resultados de todos sus jugadores. Para continuar, pulsa «Eliminar partida».</p><div class="acts"><button class="btn ghost" onclick="dlg.close()">Cancelar</button><button class="btn del" id="dok">Eliminar partida</button></div></dialog>
@@ -201,25 +201,22 @@ const Repo={
  async getGames(){const r=await db.from("games").select("id,legacy_id,season_id,played_at,player_count,seasons(name),game_results(position,player_id,victory_points,players(name))").order("played_at",{ascending:true}).limit(2000);if(r.error)throw r.error;return(r.data||[]).map(g=>({id:g.id,legacyId:g.legacy_id,seasonId:g.season_id,date:g.played_at,playerCount:g.player_count,results:(g.game_results||[]).map(x=>({playerId:x.player_id,position:x.position,vp:x.victory_points,playerName:x.players&&x.players.name||""})).sort((x,y)=>x.position-y.position)}))},
  async getGameResults(){return M.games.flatMap(g=>g.results.map(r=>({...r,gameId:g.id})))},
  async createPlayer(name){const r=await db.from("players").insert({name}).select("*").single();if(r.error)throw r.error;return r.data},
- async createSeason(s){const r=await db.from("seasons").insert({name:s.name,start_date:s.start_date,end_date:s.end_date,is_active:true}).select("*").single();if(r.error)throw r.error;return r.data},
+ async createSeason(s){const r=await db.from("seasons").insert({name:s.name,is_active:true}).select("*").single();if(r.error)throw r.error;return r.data},
  async createGame(g){const r=await db.rpc("record_game",{p_season_id:g.seasonId,p_played_at:g.date,p_results:g.results.map(x=>({player_id:x.playerId,position:x.position,victory_points:x.vp}))});if(r.error)throw r.error},
  async updateGame(id,g){const u=await db.from("games").update({season_id:g.seasonId,played_at:g.date,player_count:g.results.length}).eq("id",id);if(u.error)throw u.error;const d=await db.from("game_results").delete().eq("game_id",id);if(d.error)throw d.error;const i=await db.from("game_results").insert(g.results.map(x=>({game_id:id,player_id:x.playerId,position:x.position,victory_points:x.vp})));if(i.error)throw i.error},
  async deleteGame(id){const r=await db.from("games").delete().eq("id",id);if(r.error)throw r.error}
 };
 async function load(){if(!db)throw new Error("No se cargó el cliente de Supabase.");setStatus(false,"Conectando con Supabase…");const r=await Promise.race([Promise.all([Repo.getSeasons(),Repo.getPlayers(),Repo.getGames()]),new Promise((_,reject)=>setTimeout(()=>reject(new Error('Supabase no respondió a tiempo')),12000))]);M.seasons=r[0].map(s=>({id:s.id,name:s.name,start:s.start_date||null,end:s.end_date||null,isActive:!!s.is_active}));M.players=r[1].map(p=>({id:p.id,name:p.name}));M.games=r[2];for(const s of M.seasons){const dates=M.games.filter(g=>g.seasonId==s.id).map(g=>g.date).filter(Boolean).sort();if(!s.start)s.start=dates[0]||null;if(!s.end)s.end=dates[dates.length-1]||null}M.games.sort((x,y)=>x.date<y.date?-1:x.date>y.date?1:Number(x.id)-Number(y.id));if(!M.seasons.some(s=>s.id==state.season))state.season=M.seasons.find(s=>s.isActive)?.id||M.seasons[0]?.id||null;if(!M.seasons.some(s=>s.id==state.f))state.f=state.season||0;setStatus(true)}
-function openSeason(){if(!requireBackend())return;const d=new Date(),today=[d.getFullYear(),String(d.getMonth()+1).padStart(2,"0"),String(d.getDate()).padStart(2,"0")].join("-");$("sn").value="";$("sv").value="normal";$("sstart").value=today;$("send").value="";$("serr").textContent="";$("sdlg").showModal();$("sn").focus()}
+function openSeason(){if(!requireBackend())return;$("sn").value="";$("sv").value="normal";$("serr").textContent="";$("sdlg").showModal();$("sn").focus()}
 async function addSeason(){
  if(!requireBackend())return;
- const name=$("sn").value.trim(),start=$("sstart").value,end=$("send").value,variant=$("sv").value,err=$("serr"),btn=document.querySelector('#sdlg [onclick="addSeason()"]');
+ const name=$("sn").value.trim(),variant=$("sv").value,err=$("serr"),btn=document.querySelector('#sdlg [onclick="addSeason()"]');
  const prefix={normal:"Normal",navegantes:"Navegantes",ck:"C&K"}[variant]||"Normal",seasonName=prefix+" - "+name;
  if(name.length<2||name.length>67){err.textContent="El nombre debe tener entre 2 y 67 caracteres.";return}
- if(!start){err.textContent="Indica la fecha de inicio.";return}
- if(!end){err.textContent="Indica la fecha de fin.";return}
- if(end<start){err.textContent="La fecha de fin debe ser igual o posterior a la de inicio.";return}
  if(M.seasons.some(s=>s.name.trim().toLocaleLowerCase()===seasonName.toLocaleLowerCase())){err.textContent="Ya existe una temporada con ese nombre.";return}
  if(btn)btn.disabled=true;err.textContent="";
  try{
-  const created=await Repo.createSeason({name:seasonName,start_date:start,end_date:end});
+  const created=await Repo.createSeason({name:seasonName});
   await load();
   state.season=Number(created.id);state.f=Number(created.id);
   $("sdlg").close();route();toast("Temporada guardada en Supabase");
