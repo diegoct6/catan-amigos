@@ -77,12 +77,31 @@ function token(num) {
   return `<circle class="number-disc" cx="0" cy="2" r="12"/><text class="number-text${hot}" x="0" y="3">${num}</text>`;
 }
 
-function tile([x, y, kind, num], i) {
-  return `<g transform="translate(${x} ${y})"><g class="hex-tile" style="--i:${i}"><defs><clipPath id="hex-${i}" clipPathUnits="userSpaceOnUse"><polygon points="${HEX}"/></clipPath></defs><polygon class="hex-shadow" points="${HEX}" transform="translate(0 4)"/><polygon class="tile-face tile-${kind}" points="${HEX}"/><g clip-path="url(#hex-${i})">${art(kind, i)}${token(num)}</g><polygon class="hex-rim" points="${HEX}"/></g></g>`;
+function dropPose(p) {
+  if (p <= 0) return {y: -72, o: 0};
+  if (p >= 1) return {y: 0, o: 1};
+  const stops = [
+    {t: 0, y: -72, o: 0},
+    {t: 0.52, y: 7, o: 1},
+    {t: 0.7, y: -4, o: 1},
+    {t: 0.84, y: 2, o: 1},
+    {t: 1, y: 0, o: 1}
+  ];
+  let i = 1;
+  while (i < stops.length - 1 && stops[i].t < p) i += 1;
+  const a = stops[i - 1];
+  const b = stops[i];
+  const f = (p - a.t) / (b.t - a.t || 1);
+  return {y: a.y + (b.y - a.y) * f, o: a.o + (b.o - a.o) * f};
+}
+
+function tile([x, y, kind, num], i, settled) {
+  const dropped = settled ? "" : ` opacity="0" transform="translate(0 -72)"`;
+  return `<g transform="translate(${x} ${y})"><g class="hex-tile" style="--i:${i}"${dropped}><defs><clipPath id="hex-${i}" clipPathUnits="userSpaceOnUse"><polygon points="${HEX}"/></clipPath></defs><polygon class="hex-shadow" points="${HEX}" transform="translate(0 4)"/><polygon class="tile-face tile-${kind}" points="${HEX}"/><g clip-path="url(#hex-${i})">${art(kind, i)}${token(num)}</g><polygon class="hex-rim" points="${HEX}"/></g></g>`;
 }
 
 function boat() {
-  return `<g class="island-boat" transform="translate(760 52) rotate(2 90 455)"><g class="boat-bob"><g class="boat-wake" fill="none" stroke="#d6eee5" stroke-width="2.6"><path d="M10 484q40-10 80 0t80 0m-142 12q33-8 66 0t66 0"/></g><path d="M41 456h96l-14 22H56z" fill="#744a30" stroke="#e5c790" stroke-width="2"/><path d="M56 460h72m-58 8h45" stroke="#cba36d" stroke-width="1.8"/><path d="M90 455v-42" stroke="#e6d5b0" stroke-width="3.4"/><path d="M87 417l-24 34h24z" fill="#fff0ce" stroke="#634a32" stroke-width="1.7"/><path d="M96 421l30 30H96z" fill="#dcc99e" stroke="#634a32" stroke-width="1.7"/><path d="M91 407l16 7-16 7z" fill="#c63d30"/></g></g>`;
+  return `<g class="island-boat" transform="translate(760 52) rotate(2 90 455)"><g class="boat-bob"><g transform="translate(90 455) scale(1.35) translate(-90 -455)"><g class="boat-wake" fill="none" stroke="#d6eee5" stroke-width="2.6"><path d="M10 484q40-10 80 0t80 0m-142 12q33-8 66 0t66 0"/></g><path d="M41 456h96l-14 22H56z" fill="#744a30" stroke="#e5c790" stroke-width="2"/><path d="M56 460h72m-58 8h45" stroke="#cba36d" stroke-width="1.8"/><path d="M90 455v-42" stroke="#e6d5b0" stroke-width="3.4"/><path d="M87 417l-24 34h24z" fill="#fff0ce" stroke="#634a32" stroke-width="1.7"/><path d="M96 421l30 30H96z" fill="#dcc99e" stroke="#634a32" stroke-width="1.7"/><path d="M91 407l16 7-16 7z" fill="#c63d30"/></g></g></g>`;
 }
 
 function robber() {
@@ -93,7 +112,7 @@ export function islandMarkup({settled = false} = {}) {
   const mode = settled ? "is-settled" : "is-intro";
   const intro = settled ? "open" : "lock";
   const {x, y, w, h} = FRAME;
-  return `<div class="island-world ${mode}" data-intro="${intro}" data-settle-ms="${introSettleMs()}" data-front-ms="${INTRO.frontMs}" style="--vw:${w};--vh:${h};--lead:${INTRO.leadMs}ms;--stagger:${INTRO.staggerMs}ms;--drop:${INTRO.dropMs}ms" aria-hidden="true"><svg class="island-svg" viewBox="${x} ${y} ${w} ${h}" pointer-events="none"><defs><pattern id="wave-lines" width="140" height="72" patternUnits="userSpaceOnUse"><path d="M0 18q30-10 60 0t60 0M-24 48q30-10 60 0t60 0" fill="none" stroke="#C5E4DC" stroke-width="1.6"/></pattern></defs><rect x="${x}" y="${y}" width="${w}" height="${h}" fill="#143848"/><rect x="${x}" y="468" width="${w}" height="92" fill="#1E5670"/><rect class="water-grain" x="${x}" y="${y}" width="${w}" height="${h}"/><ellipse cx="480" cy="292" rx="250" ry="186" fill="#0E2A36" opacity=".42"/><g class="map-cloud" fill="#F6F0DF" opacity=".28"><ellipse cx="280" cy="52" rx="72" ry="12"/><ellipse cx="312" cy="44" rx="28" ry="15"/></g><g class="map-cloud alt" fill="#F6F0DF" opacity=".2"><ellipse cx="640" cy="70" rx="84" ry="11"/><ellipse cx="674" cy="62" rx="30" ry="14"/></g>${boat()}<g class="island-board">${TILES.map(tile).join("")}${robber()}</g></svg></div>`;
+  return `<div class="island-world ${mode}" data-intro="${intro}" data-settle-ms="${introSettleMs()}" data-front-ms="${INTRO.frontMs}" style="--vw:${w};--vh:${h};--lead:${INTRO.leadMs}ms;--stagger:${INTRO.staggerMs}ms;--drop:${INTRO.dropMs}ms" aria-hidden="true"><svg class="island-svg" viewBox="${x} ${y} ${w} ${h}" pointer-events="none"><defs><pattern id="wave-lines" width="140" height="72" patternUnits="userSpaceOnUse"><path d="M0 18q30-10 60 0t60 0M-24 48q30-10 60 0t60 0" fill="none" stroke="#C5E4DC" stroke-width="1.6"/></pattern></defs><rect x="${x}" y="${y}" width="${w}" height="${h}" fill="#143848"/><rect x="${x}" y="468" width="${w}" height="92" fill="#1E5670"/><rect class="water-grain" x="${x}" y="${y}" width="${w}" height="${h}"/><ellipse cx="480" cy="292" rx="250" ry="186" fill="#0E2A36" opacity=".42"/><g class="map-cloud" fill="#F6F0DF" opacity=".28"><ellipse cx="280" cy="52" rx="72" ry="12"/><ellipse cx="312" cy="44" rx="28" ry="15"/></g><g class="map-cloud alt" fill="#F6F0DF" opacity=".2"><ellipse cx="640" cy="70" rx="84" ry="11"/><ellipse cx="674" cy="62" rx="30" ry="14"/></g>${boat()}<g class="island-board">${TILES.map((spec, i) => tile(spec, i, settled)).join("")}${robber()}</g></svg></div>`;
 }
 
 let phase = "idle";
@@ -134,9 +153,9 @@ function boatKeys() {
     keys: [
       {t: 0, x: 760, y: 52, r: 2},
       {t: s, x: -50, y: 46, r: -1.6},
-      {t: s + front * 0.16, x: 140, y: 18, r: -0.3},
-      {t: s + front * 0.68, x: 470, y: -32, r: 0.8},
-      {t: 1, x: 990, y: -6, r: 1.7}
+      {t: s + front * 0.12, x: 70, y: -55, r: -0.2},
+      {t: s + front * 0.7, x: 520, y: -84, r: 0.4},
+      {t: 1, x: 1040, y: -24, r: 1.5}
     ]
   };
 }
@@ -174,6 +193,10 @@ export function mountIslandIntro(reduceMotion) {
     finished = true;
     phase = "done";
     if (!world.isConnected) return;
+    tiles.forEach((el) => {
+      el.setAttribute("opacity", "1");
+      el.removeAttribute("transform");
+    });
     world.classList.remove("is-intro", "is-front");
     world.classList.add("is-settled");
     world.dataset.intro = "open";
@@ -189,6 +212,12 @@ export function mountIslandIntro(reduceMotion) {
     const elapsed = time - t0;
     const u = Math.min(1, Math.max(0, elapsed / total));
     const p = sample(keys, u);
+    tiles.forEach((el) => {
+      const i = Number(el.style.getPropertyValue("--i"));
+      const pose = dropPose((elapsed - (INTRO.leadMs + i * INTRO.staggerMs)) / INTRO.dropMs);
+      el.setAttribute("opacity", pose.o.toFixed(3));
+      el.setAttribute("transform", `translate(0 ${pose.y.toFixed(2)})`);
+    });
     boatEl.setAttribute("transform", `translate(${p.x.toFixed(1)} ${p.y.toFixed(1)}) rotate(${p.r.toFixed(2)} 90 455)`);
     if (elapsed >= settle) toFront();
     if (u < 1) requestAnimationFrame(step);

@@ -26,7 +26,7 @@ assert.equal((home.match(/tile-desert/g) || []).length, 1);
 const css = readFileSync(new URL("../css/app.css", import.meta.url), "utf8");
 assert.match(css, /\.tile-grain \{ fill: #F2C230; \}/);
 assert.match(css, /\.tile-brick \{ fill: #B3261E; \}/);
-assert.match(css, /@keyframes hex-drop/);
+assert.match(css, /\.hex-tile \{ opacity: 1 !important; transform: none !important; \}/);
 assert.match(css, /\.island-boat \{ display: none !important; \}/);
 assert.equal(introSettleMs(), INTRO.leadMs + (INTRO.hexes - 1) * INTRO.staggerMs + INTRO.dropMs);
 assert.equal(introSettleMs(), 4040);

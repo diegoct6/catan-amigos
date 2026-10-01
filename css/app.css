@@ -597,40 +597,20 @@ body.is-keypad .entry-row { scroll-margin-top: 72px; scroll-margin-bottom: 390px
   border-radius: 2px;
   background: #143848;
   pointer-events: none;
-  container-type: inline-size;
 }
 .island-svg {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: calc(var(--vw, 640) * 1px);
-  height: calc(var(--vh, 552) * 1px);
-  transform-origin: 0 0;
-  transform: scale(calc(100cqi / var(--vw, 640)));
+  inset: 0;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
 }
 .water-grain { fill: url(#wave-lines); opacity: .28; }
 .map-cloud { animation: cloud-drift 28s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: center; }
 .map-cloud.alt { animation-duration: 36s; animation-direction: alternate-reverse; }
 @keyframes cloud-drift { from { transform: translateX(-8px); } to { transform: translateX(16px); } }
-.hex-tile {
-  transform-box: fill-box;
-  transform-origin: center;
-  pointer-events: none;
-  animation-name: hex-drop;
-  animation-duration: var(--drop, 720ms);
-  animation-timing-function: linear;
-  animation-fill-mode: both;
-  animation-delay: calc(var(--lead, 80ms) + var(--i, 0) * var(--stagger, 180ms));
-}
-.island-world.is-settled .hex-tile { animation: none; opacity: 1; transform: none; }
-@keyframes hex-drop {
-  0% { opacity: 0; transform: translateY(-72px); }
-  52% { opacity: 1; transform: translateY(7px); }
-  70% { transform: translateY(-4px); }
-  84% { transform: translateY(2px); }
-  100% { opacity: 1; transform: translateY(0); }
-}
+.hex-tile { pointer-events: none; }
+.island-world.is-settled .hex-tile { opacity: 1; transform: none; }
 .hex-shadow { fill: #0c2832; opacity: .45; }
 .tile-wood { fill: #2F6A43; }
 .tile-grain { fill: #F2C230; }
