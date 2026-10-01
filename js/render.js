@@ -3,6 +3,7 @@ import {
   esc, fx, inScope, lr, pc, pname, resolveResults, rng, scoreAmigos, sname,
   standings, withDraft, wr
 } from "./domain.js";
+import {islandMarkup} from "./island.js";
 
 const ICONS = {
   mesa: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 7h8M7 12h10M8 17h8"/></svg>',
@@ -26,7 +27,7 @@ function dot(M, id) {
 
 function banner(state) {
   if (state.mode !== "mock") return "";
-  return `<p class="banner">Ejemplo con el histórico. No se escribe en Supabase. <button type="button" data-act="reconnect">Conectar</button></p>`;
+  return `<p class="banner fd">Ejemplo con el histórico. No se escribe en Supabase. <button type="button" data-act="reconnect">Conectar</button></p>`;
 }
 
 function boardList(M, rows, opts = {}) {
@@ -205,13 +206,15 @@ function form5(M, scope) {
 function home(ctx) {
   const {M, state} = ctx;
   const s = M.seasons.find((x) => x.id == state.season) || M.seasons[0];
-  if (!s) return `${banner(state)}<section class="screen" data-screen="mesa"><h1>Catan Amigos</h1><p class="lede">No hay temporadas todavía.</p><p><button type="button" class="btn" data-act="open-season" style="width:auto">Nueva temporada</button></p></section>`;
+  const island = islandMarkup({settled: !!state.boardSettled});
+  if (!s) return `${banner(state)}<section class="screen" data-screen="mesa">${island}<h1>Catan Amigos</h1><p class="lede">No hay temporadas todavía.</p><p><button type="button" class="btn" data-act="open-season" style="width:auto">Nueva temporada</button></p></section>`;
   const games = inScope(M.games, s.id);
   const last = games[games.length - 1];
   const table = standings(M, s.id);
   const leader = table[0];
   const close = closestGame(M, s.id);
   return `${banner(state)}<section class="screen" data-screen="mesa">
+    ${island}
     <p class="kicker">La mesa</p>
     <h1>${esc(s.name)}</h1>
     <p class="lede">${games.length} partidas · ${esc(rng(s))}</p>
