@@ -9,7 +9,8 @@ Direction: **a score slip on a walnut table.** The phone is the table (dark, qui
 - Indigo, violet, or blue-purple gradients
 - Glassmorphism, blur panels, neon glow
 - Three-column feature marketing grids
-- Giant decorative headlines, island illustrations, confetti
+- Giant decorative headlines, confetti
+- A marketing island hero. The home load sequence is the one island: tiles drop, then the slip is the task.
 - Pill-shaped everything, stacked drop shadows, blob backgrounds
 - Inter, Roboto, Arial, system-ui as the chosen voice
 - Count-up numbers, looping motion, chart “draw-on” animations
@@ -135,7 +136,10 @@ Radius is **2px** on slips, fields, and buttons. Not pills.
 
 - Press: 120ms, `translateY(1px)` only.
 - Winner name: one 360ms rise of 8px, ease `cubic-bezier(.2,.7,.2,1)`, once.
-- `prefers-reduced-motion: reduce` kills both. No scroll-jacking, no looping boats, no chart replay.
+- Section enter: the same 8px fade (`.fd`, 450ms), staggered a few dozen milliseconds on the kicker, title, lede, and slip.
+- Dock: 160ms color and wash on hover, 1px down on press.
+- Home island (`js/island.js`): hexes drop one by one (80ms lead, 180ms apart, 720ms bounce). The boat stays behind the tiles, then one 5200ms pass in front, then it leaves. Not a loop.
+- `prefers-reduced-motion: reduce` skips the drop and the boat and shows the settled board. No scroll-jacking, no chart replay.
 
 ## Copy
 

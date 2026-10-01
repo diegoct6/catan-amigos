@@ -1,4 +1,5 @@
 import {draftFromEntry, entryError, esc, inScope, dm} from "./domain.js";
+import {islandIsSettled, mountIslandIntro, noteIslandRoute} from "./island.js";
 import {fragments, render, shareText} from "./render.js";
 import {api, connectLive, mockModel, reloadLive} from "./repo.js";
 
@@ -191,12 +192,16 @@ function refreshScore() {
 
 function paint(reset) {
   const route = parseRoute();
+  noteIslandRoute(route.name);
+  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  state.boardSettled = route.name === "mesa" && islandIsSettled(reduceMotion);
   syncForm(route);
   const scoring = route.name === "registrar" || route.name === "editar";
   document.body.classList.toggle("is-scoring", scoring);
   document.body.classList.toggle("is-keypad", scoring && !!(F && F.rows.length));
   const y = window.scrollY;
   $("app").innerHTML = render(route, viewCtx());
+  if (route.name === "mesa") mountIslandIntro(reduceMotion);
   syncNav(route);
   syncSeason();
   const key = `${route.name}/${route.id}`;
