@@ -1,349 +1,100 @@
 <!DOCTYPE html>
-<html lang="es"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>CATAN Amigos</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-:root{/* CATAN Universe inspira la pareja rojo/amarillo; valores aproximados visuales, no colores oficiales publicados. */--bg:#B3261E;--pg:#e6d5ae;--on:#fff1cf;--sheet:#f8efd9;--sh2:#ecdfc0;--ink:#2c1a14;--mut:#6d5647;--line:#c9b48b;--brick:#B3261E;--grain:#F2C230;--wood:#7b5332;--wool:#6d8850;--ore:#485560;--water:#4d7890;
---ser:'Fraunces',Georgia,'Times New Roman',serif;--san:'Instrument Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
---noise:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 .3 0 0 0 0 .2 0 0 0 0 .1 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
-box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
-*{box-sizing:border-box}
-body{margin:0;min-height:100%;background:var(--bg) var(--noise);color:var(--ink);font:400 1rem/1.55 var(--san);-webkit-text-size-adjust:100%}
-a{color:inherit;text-decoration:none}
-h1,h2,h3,.ser{font-family:var(--ser);font-weight:600;margin:0;letter-spacing:-.02em;line-height:1}
-.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
-header{border-bottom:1px solid var(--line)}
-.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0}
-.logo{font:600 1.35rem var(--ser);display:flex;align-items:center;gap:10px;letter-spacing:-.02em}
-nav{display:flex;gap:4px;overflow-x:auto;padding-bottom:12px;scrollbar-width:none}
-nav a{padding:8px 14px;border-radius:99px;font-weight:500;font-size:.92rem;color:var(--mut);white-space:nowrap;transition:background .2s,color .2s}
-nav a:hover{background:var(--sh2)}nav a.on{background:var(--ink);color:var(--sheet)}
-nav a.cta{margin-left:auto;background:var(--brick);color:#fff8ec}
-.hex{display:inline-grid;place-items:center;width:var(--s,28px);height:var(--s,28px);background:var(--c,var(--wood));clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);flex:none}
-.hex svg{width:56%;height:56%;fill:none;stroke:#fffaf0;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.tok{display:inline-grid;place-items:center;width:var(--s,44px);height:var(--s,44px);border-radius:50%;background:#ecd9a8;color:#2c1a14;border:2px solid #b89a5c;font:600 calc(var(--s,44px)*.46) var(--ser);flex:none;box-shadow:0 2px 0 rgba(60,30,10,.25)}
-.tok.w{background:var(--brick);color:#fff4e0;border-color:#6d1d14}
-.road{height:5px;border-radius:3px;background:repeating-linear-gradient(90deg,var(--wood) 0 16px,transparent 16px 22px);opacity:.45;margin:28px 0}
-.sheet{background:var(--sheet) var(--noise);border:1px solid var(--line);border-radius:6px;box-shadow:0 1px 0 var(--line),0 10px 24px -14px rgba(60,30,10,.35);position:relative}
-.hero{position:relative;padding:56px 0 40px;overflow:hidden}
-.hero h1{font-weight:800;font-size:clamp(3.4rem,14vw,10.5rem);line-height:.84;letter-spacing:-.045em}
-.hero .sl{display:flex;flex-wrap:wrap;gap:6px 28px;margin-top:26px;font-weight:600;letter-spacing:.14em;font-size:.85rem}
-.hero .sl span:first-child{color:var(--brick)}
-.cluster{position:absolute;right:20px;top:34px;width:230px;height:250px;display:none}
-.cluster .hex{position:absolute}
-@media(min-width:860px){.cluster{display:block}}
-h2.sec{font-size:clamp(1.8rem,4vw,2.6rem);margin-bottom:6px}
-.sub{color:var(--mut);margin:0 0 22px;max-width:60ch}
-.lb{list-style:none;margin:0;padding:0}
-.st>*{animation:up .7s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--i,0)*80ms)}
-@keyframes up{from{opacity:0;transform:translateY(18px)}}
-@keyframes gx{from{transform:scaleX(0)}}
-@keyframes dr{from{stroke-dashoffset:1}}
-@keyframes fd{from{opacity:0;transform:translateY(8px)}}
-.fd{animation:fd .45s ease both}
-.p1{padding:30px 28px 26px 76px;display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:18px;background:var(--sheet)}
-.p1 .tok{position:absolute;left:-14px;top:-16px;--s:72px;transform:rotate(-8deg)}
-.nm{font-family:var(--ser);font-weight:600;letter-spacing:-.025em}
-.p1 .nm{font-size:clamp(2.6rem,7vw,4.8rem);line-height:.95;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-.big{font:800 clamp(3rem,9vw,6.4rem)/.85 var(--ser);color:var(--brick);letter-spacing:-.04em}
-.big small{display:block;font:500 .78rem var(--san);letter-spacing:.1em;color:var(--mut);margin-top:6px;text-transform:uppercase}
-.meta{color:var(--mut);font-size:.9rem;display:flex;flex-wrap:wrap;gap:2px 16px}
-.p1{align-items:end}
-@media(min-width:760px){.p1{grid-template-columns:1fr auto;padding-left:96px}}
-.duo{display:grid;gap:18px;margin-bottom:8px}
-@media(min-width:760px){.duo{grid-template-columns:1fr 1fr}}
-.p2{padding:22px 22px 20px 62px;display:flex;justify-content:space-between;align-items:end;gap:10px;flex-wrap:wrap}
-.p2 .tok{position:absolute;left:12px;top:12px;--s:40px}
-.p2 .nm{font-size:clamp(1.8rem,4vw,2.5rem);display:flex;align-items:center;gap:10px}
-.p2 .big{font-size:clamp(2.2rem,5vw,3.2rem);color:var(--ink)}
-.p2 .meta{width:100%}
-.rw{display:grid;grid-template-columns:40px 1fr auto;gap:4px 14px;align-items:center;padding:14px 4px;border-bottom:1px dashed var(--line);transition:background .2s,padding .2s}
-.rw:hover,.p1:hover,.p2:hover{background:var(--sh2)}
-.rw:hover{padding-left:12px}
-.rw .nm{font-size:1.5rem;display:flex;align-items:center;gap:10px}
-.rw .meta{grid-column:2}.rw .sc{grid-row:1/3;grid-column:3;font:600 1.9rem var(--ser);text-align:right}
-.rw .tok{--s:34px}
-.nums{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
-.nums div{border-left:5px solid var(--c);padding-left:16px}
-.nums b{display:block;font:800 clamp(2.6rem,6vw,4rem)/1 var(--ser);letter-spacing:-.03em}
-.nums span{color:var(--mut);font-size:.9rem}
-.gm{padding:20px 22px;margin-bottom:16px;display:grid;gap:14px}
-@media(min-width:760px){.gm{grid-template-columns:110px 1fr;gap:26px}}
-.dt{font:600 2.6rem/.9 var(--ser);letter-spacing:-.03em}.dt small{display:block;font:500 .85rem var(--san);color:var(--mut);letter-spacing:0;margin-top:6px}
-.ln{display:grid;gap:2px 22px}
-@media(min-width:700px){.ln{grid-template-columns:1fr 1fr}}
-.pl{display:grid;grid-template-columns:30px 1fr auto auto;gap:10px;align-items:center;padding:7px 0;border-bottom:1px dotted var(--line)}
-.pl .tok{--s:28px}.pl .nm{font-size:1.15rem}.pl em{font-style:normal;color:var(--mut);font-size:.85rem}.pl b{font:600 1.1rem var(--ser);min-width:3ch;text-align:right}
-.chips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 24px}
-.chip{border:1px solid var(--ink);background:transparent;color:var(--ink);padding:9px 18px;border-radius:99px;font:500 .92rem var(--san);cursor:pointer;transition:background .2s,color .2s}
-.chip.on{background:var(--ink);color:var(--sheet)}
-.chip:active{transform:scale(.97)}
-:focus-visible{outline:3px solid var(--water);outline-offset:2px}
-.chap{padding:26px 24px;margin-bottom:22px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:end}
-.chap h2{font-size:clamp(2.4rem,7vw,4.6rem)}.chap p{margin:8px 0 0;font-weight:600;letter-spacing:.12em;font-size:.85rem;color:var(--brick)}
-.cs{display:grid;gap:34px}
-@media(min-width:900px){.cs{grid-template-columns:1fr 1fr}}
-.ch h3{font-size:1.7rem;display:flex;align-items:center;gap:10px;margin-bottom:14px}
-.br{display:grid;grid-template-columns:96px 1fr 50px;gap:10px;align-items:center;margin:8px 0;font-size:.95rem}
-.br div{height:16px;background:var(--sh2);border-radius:3px;overflow:hidden}
-.br i{display:block;height:100%;background:var(--c);transform-origin:left;animation:gx 1s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--i)*70ms)}
-.br b{text-align:right;font:600 1.05rem var(--ser)}
-svg.ln2{width:100%;height:auto;overflow:visible}
-svg.ln2 path{fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;animation:dr 1.6s cubic-bezier(.3,.6,.2,1) both}
-.leg{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;font-size:.88rem;color:var(--mut)}.leg span{display:flex;gap:6px;align-items:center}
-.prof{display:flex;gap:22px;align-items:center;flex-wrap:wrap;margin-bottom:26px}
-.form{padding:24px;display:grid;gap:16px;max-width:680px}
-label{font-weight:500;font-size:.9rem;display:grid;gap:6px}
-input,select{font:inherit;padding:11px 12px;border:1px solid var(--line);border-radius:6px;background:var(--sheet);color:var(--ink);min-height:44px}
-.fr{display:grid;grid-template-columns:1fr 90px;gap:10px}
-.btn{background:var(--brick);color:#fff8ec;border:0;border-radius:99px;padding:13px 26px;font:600 1rem var(--san);cursor:pointer;justify-self:start;transition:transform .15s,filter .2s}
-.btn:hover{filter:brightness(1.1)}.btn:active{transform:scale(.97)}
-.err{color:var(--brick);font-weight:500;min-height:1.4em}
-.formula{padding:34px 26px;text-align:center;font:600 clamp(1.4rem,4.2vw,2.8rem)/1.25 var(--ser);letter-spacing:-.02em}
-.formula small{display:block;font:500 .9rem var(--san);color:var(--mut);margin-top:12px;letter-spacing:0}
-.mult{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:14px}
-.mult div{text-align:center;padding:16px 8px}.mult b{display:block;font:800 2.4rem var(--ser)}
-.two{display:grid;gap:18px}@media(min-width:760px){.two{grid-template-columns:1fr 1fr}}
-.two>div{padding:24px}.two h3{font-size:1.6rem;margin-bottom:8px}
-footer{padding:44px 0 60px;color:var(--mut);font-size:.88rem}
-main{padding-bottom:20px}
-@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-.top{flex-wrap:wrap}.connection{display:flex;align-items:center;gap:5px;color:var(--on);font-size:.82rem;font-weight:600;white-space:nowrap}.connection .dot{width:8px;height:8px;border-radius:50%;background:#7eb05d}.connection.off .dot{background:#e77a68}.btn:disabled,.new-season:disabled{opacity:.52;cursor:not-allowed}
-header{border-bottom:1px solid rgba(244,230,200,.25)}
-.logo{color:var(--on)}
-nav a{color:var(--on)}nav a:hover{background:rgba(244,230,200,.14)}nav a.on{background:var(--on);color:var(--bg)}nav a.cta{background:var(--grain);color:#2c1a14}
-header :focus-visible{outline-color:var(--grain)}
-.seg{display:flex;border:1px solid rgba(244,230,200,.4);border-radius:99px;padding:3px}
-.seg button{border:0;background:transparent;color:var(--on);padding:8px 14px;min-height:40px;border-radius:99px;font:500 .88rem var(--san);cursor:pointer;transition:background .2s,color .2s}
-.seg button.on{background:var(--on);color:var(--bg)}
-main.wrap{background:var(--pg) var(--noise);margin:0 auto;padding:0 clamp(16px,3vw,32px) 28px;overflow-x:clip;width:100%;box-shadow:none;border-radius:0}
-footer{color:rgba(244,230,200,.78)}footer .road{background:repeating-linear-gradient(90deg,var(--on) 0 16px,transparent 16px 22px)}
-.hero .sl span:first-child{font-size:1rem}
-.acts{display:flex;gap:8px;flex-wrap:wrap;grid-column:1/-1;margin-top:8px}
-.mini{display:inline-flex;align-items:center;border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:99px;padding:8px 16px;min-height:44px;font:500 .88rem var(--san);cursor:pointer;transition:background .2s}
-.mini:hover{background:var(--sh2)}.mini.dg{color:var(--brick);border-color:var(--brick)}.mini:disabled{opacity:.5;cursor:not-allowed}
-.btn{display:inline-flex;align-items:center;min-height:46px}
-.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--ink)}.btn.del{background:var(--brick)}
-dialog{border:1px solid var(--line);border-radius:10px;background:var(--sheet);color:var(--ink);padding:26px;width:min(440px,calc(100vw - 32px))}
-dialog::backdrop{background:rgba(40,8,14,.72)}dialog h3{font-size:1.7rem;margin-bottom:8px}dialog .acts{margin-top:20px}
-.pgrid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr));margin-bottom:22px}
-.pc{padding:20px;display:grid;gap:8px;font:inherit;color:inherit;text-align:left;cursor:pointer;width:100%;align-content:start}
-.pc .nm{font-size:1.9rem;display:flex;align-items:center;gap:10px}
-.pc.sel{outline:3px solid var(--brick);outline-offset:-3px}
-.tie{border-left:5px solid var(--grain);background:var(--sh2);padding:14px 16px;border-radius:4px;display:grid;gap:10px}
-.tie div{display:flex;gap:14px;flex-wrap:wrap}
-.frs{display:grid;gap:10px}.fr{grid-template-columns:1fr 96px}
-.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,12px);background:var(--ink);color:var(--sheet);padding:12px 20px;border-radius:99px;opacity:0;pointer-events:none;transition:.25s;z-index:50;font-weight:500;max-width:calc(100vw - 32px)}
-.toast.show{opacity:1;transform:translate(-50%,0)}.season-nav{display:flex;align-items:center;gap:8px;margin-left:auto}.season-nav label{color:var(--on);font-size:.72rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase}.season-nav select{min-height:42px;padding:8px 34px 8px 12px;border:1px solid rgba(244,230,200,.45);border-radius:8px;background:rgba(44,26,20,.22);color:var(--on);font:600 .9rem var(--san);max-width:220px}.season-nav select option{background:#f8efd9;color:#2c1a14}.season-nav .new-season{min-height:42px;padding:8px 12px;border:0;border-radius:8px;background:var(--grain);color:#2c1a14;font:700 .85rem var(--san);cursor:pointer}.season-nav .new-season:hover{filter:brightness(1.05)}.season-nav .new-season:disabled:hover{filter:none}.season-panel{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:0 0 22px}.season-panel select{min-height:48px;flex:1;min-width:220px}.season-panel .btn{white-space:nowrap}.season-note{font-size:.92rem;color:var(--mut)}
-.insights{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:0 0 10px}.blowout{margin:10px 0 22px;padding:16px 20px;border-left:6px solid var(--brick);display:grid;gap:4px}.blowout .label{font-size:.76rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mut)}.blowout strong{font:700 clamp(1.35rem,3vw,2rem)/1.1 var(--ser);color:var(--brick)}.blowout p{margin:2px 0 0;color:var(--mut)}.insight{padding:20px 18px;min-height:154px;border-top:5px solid var(--accent);display:flex;flex-direction:column;justify-content:space-between}.insight .label{font-size:.76rem;line-height:1.3;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mut)}.insight .value{font:800 clamp(2.2rem,5vw,3.5rem)/1 var(--ser);color:var(--ink);letter-spacing:-.04em;overflow-wrap:anywhere}.insight .detail{font-size:.94rem;color:var(--mut);margin-top:8px}.insight.leader .value{font-size:clamp(1.65rem,3vw,2.25rem);color:var(--brick)}
-.chart-frame{padding:8px 0 0}.chart-axis{font:12px var(--san);fill:var(--mut)}.chart-grid{stroke:var(--line);stroke-width:1}.chart-point{stroke:var(--sheet);stroke-width:2}.chart-value{font:600 11px var(--san);fill:var(--ink)}
-@media(max-width:760px){.insights{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.insight{padding:16px 14px;min-height:136px}.insight .value{font-size:clamp(2rem,9vw,3rem)}.insight.leader .value{font-size:clamp(1.55rem,7vw,2rem)}}
-@media(max-width:390px){.insights{grid-template-columns:1fr}.insight{min-height:118px}}
-@media(max-width:700px){.season-nav label{display:none}.season-nav select{max-width:150px}.season-nav .new-season{padding:8px 10px}.nums span{font-size:1rem}.nums b{font-size:clamp(2.9rem,13vw,4.2rem)}.pl em{font-size:.9rem}.meta{font-size:.95rem}}
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Catan Amigos</title>
+  <meta name="description" content="Anota la partida de Catan, mira la tabla y guarda la historia de la mesa.">
+  <meta name="theme-color" content="#241910">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Commissioner:wght@400..700&family=Fraunces:opsz,wght@9..144,500..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/app.css">
+  <style>html,body{background:#241910;color:#F7F1E6}</style>
+</head>
+<body>
+  <a class="skip" href="#app">Saltar al contenido</a>
+  <header class="topbar">
+    <a class="mark" href="#/">
+      <svg class="mark-hex" viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 21.5,7.2 21.5,16.8 12,22 2.5,16.8 2.5,7.2"/></svg>
+      Catan Amigos
+    </a>
+    <div class="top-meta">
+      <label class="season-pick">
+        <span class="vh">Temporada</span>
+        <select id="seg" aria-label="Temporada"></select>
+      </label>
+      <p class="conn" id="status" role="status"><i></i>Conectando</p>
+    </div>
+  </header>
+  <nav class="dock" aria-label="Secciones">
+    <a href="#/" data-nav="mesa"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 20.5 8v8L12 21 3.5 16V8Z"/></svg>Mesa</a>
+    <a href="#/tabla" data-nav="tabla"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"/></svg>Tabla</a>
+    <a href="#/registrar" data-nav="anotar" class="dock-go"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Anotar</a>
+    <a href="#/partidas" data-nav="archivo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg>Archivo</a>
+    <a href="#/mas" data-nav="mas" class="only-mobile"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h.01M12 12h.01M19 12h.01"/></svg>Más</a>
+    <a href="#/temporadas" data-nav="temporadas" class="only-desk"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14M5 12h14M5 17h14"/></svg>Temporadas</a>
+    <a href="#/historico" data-nav="historico" class="only-desk"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 6h14M5 12h14M5 18h8"/></svg>Histórico</a>
+    <a href="#/estadisticas" data-nav="estadisticas" class="only-desk"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19V9M12 19V5M19 19v-7"/></svg>Estadísticas</a>
+    <a href="#/jugadores" data-nav="jugadores" class="only-desk"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 11a3 3 0 1 0-6 0M16 11a3 3 0 1 0-6 0M2 19c.6-3 2.4-4 5-4s4.4 1 5 4M12 19c.6-3 2.4-4 5-4s4.4 1 5 4"/></svg>Jugadores</a>
+    <a href="#/reglas" data-nav="reglas" class="only-desk"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h9l3 3v13H6zM9 12h6M9 16h4"/></svg>Reglas</a>
+  </nav>
+  <main id="app" tabindex="-1"></main>
+  <p class="toast" id="toast" role="status" hidden></p>
 
-.nums b span{font:inherit;color:inherit}.stats-count{grid-template-columns:minmax(220px,340px);margin:6px 0 28px}.stats-count b{font-size:clamp(3.5rem,9vw,5.5rem)}.stats-count span{font-size:1.05rem}.evo-section{grid-column:1/-1}.evo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,430px),1fr));gap:14px}.evo-card{padding:16px 18px;border:1px solid var(--line);border-radius:12px;background:var(--sheet)}.evo-card h4{font:700 1.2rem var(--ser);margin:0 0 5px;display:flex;align-items:center;gap:9px}.evo-key{width:11px;height:11px;border-radius:50%;background:var(--c);flex:none}.evo-value{font-size:.93rem;color:var(--mut);margin:0}.evo-value b{color:var(--ink);font-size:1.05rem}.evo-card .chart-frame{margin-top:5px}.nums.st b{font-size:clamp(3.25rem,8vw,5.25rem);line-height:1}.nums.st b [data-c]{display:inline-block;font:inherit!important;font-size:inherit!important;line-height:inherit!important;letter-spacing:inherit!important;color:inherit!important;vertical-align:baseline}.nums.st span{font-size:1.04rem;line-height:1.35}.season-entry{display:grid;gap:8px;align-content:start}.season-entry>.pc{min-height:200px}.season-delete{justify-self:start;min-height:40px;font-size:.9rem}@media(max-width:700px){.stats-count{grid-template-columns:1fr}.nums.st b{font-size:clamp(3rem,14vw,4.5rem)}.evo-card{padding:12px 10px}.evo-grid{grid-template-columns:1fr}}
-.hero{padding:26px 0 34px;overflow:visible}
-.hero .island-world{position:relative;inset:auto;z-index:0;height:clamp(390px,48vw,540px);margin:0 calc(clamp(16px,3vw,32px)*-1);overflow:hidden;border:1px solid rgba(226,206,147,.42);border-radius:4px;background:#0a354d;box-shadow:0 22px 48px -22px rgba(22,28,30,.62)}
-.island-world svg{position:absolute;inset:0;width:100%;height:100%;display:block}
-.hero-copy{padding:25px clamp(4px,1vw,12px) 2px}.hero-copy h1{font-size:clamp(3rem,9vw,6.2rem);line-height:.82;letter-spacing:-.055em;color:var(--ink)}
-.hero-copy .sl{margin-top:19px;display:flex;align-items:center;gap:8px 22px}.hero-copy .sl span:first-child{font-size:.82rem;padding:6px 10px;border-radius:2px;background:var(--brick);color:#fff3d3;letter-spacing:.12em}.hero-copy .sl span:last-child{font-size:.84rem;color:var(--mut)}
-.map-water{fill:url(#map-sea)}.water-grain{fill:url(#wave-lines);opacity:.3}.map-cloud{animation:cloud-drift 28s ease-in-out infinite alternate}.map-cloud.alt{animation-duration:39s;animation-direction:alternate-reverse}
-.island-board{transform-box:view-box}
-.tile-reveal{opacity:1;transform-box:fill-box;transform-origin:center;animation:tile-settle .5s cubic-bezier(.2,.78,.22,1) both;animation-delay:var(--delay)}
-.tile-face{stroke:#f4e1b0;stroke-width:2.6;stroke-linejoin:round}
-.tile-forest{fill:url(#tile-forest)}.tile-wheat{fill:url(#tile-wheat)}.tile-pasture{fill:url(#tile-pasture)}.tile-hill{fill:url(#tile-hill)}.tile-mountain{fill:url(#tile-mountain)}.tile-desert{fill:url(#tile-desert)}
-.hex-detail{clip-path:var(--hex-clip)}.forest-tree{fill:#20543b;stroke:#92ae68;stroke-width:1.1}.forest-trunk{stroke:#79583a;stroke-width:3.5}.wheat-row{fill:none;stroke:#ffe29a;stroke-width:2.3;stroke-linecap:round}.pasture-mark{fill:#c4d777;stroke:#557347;stroke-width:1.1}.hill-mark{fill:#b85035;stroke:#efae6a;stroke-width:1.1}.mountain-mark{fill:#647d87;stroke:#d5d9c5;stroke-width:1.2}.desert-dune{fill:none;stroke:#ffe2a0;stroke-width:2.2;opacity:.78}
-.number-disc{fill:#fff0c8;stroke:#735432;stroke-width:2}.number-text{font:700 11px var(--san);fill:#382a21;text-anchor:middle;dominant-baseline:central}
-.boat-pass{animation:boat-cruise 21s linear infinite;transform-box:fill-box;transform-origin:center}.boat-bob{animation:boat-bob 3.6s ease-in-out infinite;transform-box:fill-box;transform-origin:center}.boat-wake{animation:wake-glide 2.4s ease-in-out infinite}
-.edge-road,.settlement-piece{filter:url(#piece-shadow)}.road-wood{fill:#b94d35;stroke:#f0b775;stroke-width:1.2}.road-side{fill:#723b2c}.settlement-roof{fill:#d56c40;stroke:#f1cb8b;stroke-width:1.2}.settlement-wall{fill:#f1dfb3;stroke:#7b4a2f;stroke-width:1.2}
-.robber-in{opacity:0;animation:robber-appear .55s 1.1s ease-out forwards}.robber-hop{transform-box:fill-box;transform-origin:center bottom;animation:robber-bounce 8.5s 1.8s ease-in-out infinite}.robber-body{fill:#181b20;stroke:#655b51;stroke-width:1.3}.robber-glint{fill:none;stroke:#b9aa8e;stroke-width:1.1;opacity:.58}.robber-shadow{fill:#392e25;opacity:.35}
-@keyframes tile-settle{from{opacity:.25;transform:translateY(5px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}@keyframes cloud-drift{from{transform:translateX(-12px)}to{transform:translateX(24px)}}
-@keyframes boat-cruise{0%{transform:translate(-190px,4px) rotate(-2deg)}12%{transform:translate(-55px,-5px) rotate(1deg)}25%{transform:translate(95px,5px) rotate(2deg)}39%{transform:translate(245px,1px) rotate(-1deg)}53%{transform:translate(405px,-7px) rotate(-2deg)}67%{transform:translate(570px,4px) rotate(1.5deg)}81%{transform:translate(735px,8px) rotate(2deg)}92%{transform:translate(900px,-3px) rotate(-1deg)}100%{transform:translate(1050px,2px) rotate(1deg)}}
-@keyframes boat-bob{0%,100%{transform:translateY(0) rotate(0)}35%{transform:translateY(-2px) rotate(-1deg)}68%{transform:translateY(1px) rotate(.8deg)}}@keyframes wake-glide{0%,100%{opacity:.22;transform:scaleX(.84)}50%{opacity:.6;transform:scaleX(1.12)}}@keyframes robber-appear{to{opacity:1}}@keyframes robber-bounce{0%,79%,100%{transform:translateY(0)}81%{transform:translateY(-4px)}83%{transform:translateY(0)}86%{transform:translateY(-2px)}89%{transform:translateY(0)}}
-@media(max-width:600px){.hero{padding-top:16px}.hero .island-world{height:410px;margin-inline:-16px}.island-world svg{width:145%;height:100%;left:-22.5%;top:0}.hero-copy{padding-top:20px}.hero-copy h1{font-size:clamp(2.8rem,13vw,4.5rem)}.hero-copy .sl{margin-top:14px}}
-@media(prefers-reduced-motion:reduce){.tile-reveal,.map-cloud,.boat-pass,.boat-bob,.boat-wake,.robber-in,.robber-hop{animation:none!important;opacity:1!important;transform:none!important}}
-</style></head><body>
-<svg width="0" height="0" style="position:absolute"><defs>
-<symbol id="brick" viewBox="0 0 24 24"><path d="M3 6h18v5H3zM3 13h18v5H3zM10 6v5M15 13v5"/></symbol>
-<symbol id="grain" viewBox="0 0 24 24"><path d="M12 21V8M12 8c-3-1-4-3-4-5 3 0 4 2 4 5zm0 0c3-1 4-3 4-5-3 0-4 2-4 5zM12 15c-3-1-4-3-4-5M12 15c3-1 4-3 4-5"/></symbol>
-<symbol id="wood" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/></symbol>
-<symbol id="wool" viewBox="0 0 24 24"><path d="M7 18a4 4 0 010-8 5 5 0 019-1 4.5 4.5 0 011 9z"/></symbol>
-<symbol id="ore" viewBox="0 0 24 24"><path d="M3 19l6-11 4 6 3-4 5 9z"/></symbol>
-<symbol id="water" viewBox="0 0 24 24"><path d="M3 9c3-3 6 3 9 0s6 3 9 0M3 15c3-3 6 3 9 0s6 3 9 0"/></symbol>
-</defs></svg>
-<header><div class="wrap"><div class="top"><a class="logo" href="#/">Catan Amigos</a><div class="connection off" id="supabaseStatus" role="status" aria-live="polite"><i class="dot"></i>Verificando Supabase</div><div class="season-nav"><label for="seg">Temporada</label><select id="seg" aria-label="Seleccionar temporada" onchange="setSeason(+this.value)"></select><button class="new-season" onclick="openSeason()" type="button" onclick="openSeason()" data-write disabled>+ Nueva</button></div></div>
-<nav id="nav"><a href="#/">Inicio</a><a href="#/temporadas">Temporadas</a><a href="#/historico">Histórico</a><a href="#/partidas">Partidas</a><a href="#/estadisticas">Estadísticas</a><a href="#/jugadores">Jugadores</a><a href="#/reglas">Reglas</a><a class="cta" href="#/registrar">Registrar partida</a></nav></div></header>
-<main class="wrap" id="app"></main>
-<footer><div class="wrap"><div class="road"></div>La historia de nuestra mesa. Cada partida cuenta.</div></footer>
-<dialog id="sdlg"><h3>Nueva temporada</h3><p class="sub" style="margin:0 0 14px">Elige la modalidad y el nombre de esta etapa.</p><div class="form" style="padding:0"><label>Modalidad<select id="sv" aria-label="Modalidad de la temporada"><option value="normal">Normal</option><option value="navegantes">Navegantes</option><option value="ck">C&amp;K</option></select></label><label>Nombre de la temporada<input id="sn" maxlength="67" placeholder="Ej. Temporada 3 o Torneo de otoño" required></label><p class="sub">La modalidad se añadirá al nombre. Las fechas se mostrarán según las partidas registradas.</p><div class="err" id="serr" role="alert"></div><div class="acts"><button class="btn ghost" onclick="sdlg.close()" type="button">Cancelar</button><button class="btn" onclick="addSeason()" type="button" data-write disabled>Crear temporada</button></div></div></dialog>
+  <dialog id="dlg-season">
+    <h2>Nueva temporada</h2>
+    <p class="sub">La modalidad queda en el nombre. Las fechas salen de las partidas.</p>
+    <label class="field">Modalidad
+      <select id="sv" aria-label="Modalidad de la temporada">
+        <option value="normal">Normal</option>
+        <option value="navegantes">Navegantes</option>
+        <option value="ck">C&amp;K</option>
+      </select>
+    </label>
+    <label class="field">Nombre
+      <input id="sn" maxlength="67" placeholder="Temporada 3" required>
+    </label>
+    <p class="err" id="serr" role="alert"></p>
+    <div class="acts">
+      <button type="button" class="btn-quiet" data-act="close-dialog">Cancelar</button>
+      <button type="button" class="btn" data-act="add-season">Crear temporada</button>
+    </div>
+  </dialog>
 
+  <dialog id="dlg-del">
+    <h2>Borrar partida</h2>
+    <p id="del-msg" class="sub"></p>
+    <div class="acts">
+      <button type="button" class="btn-quiet" data-act="close-dialog">Cancelar</button>
+      <button type="button" class="btn-danger" data-act="confirm-del">Borrar partida</button>
+    </div>
+  </dialog>
 
-<dialog id="dlg"><h3>¿Eliminar esta partida?</h3><p class="sub" style="margin:0">Se borrará esta partida y los resultados de todos sus jugadores. Para continuar, pulsa «Eliminar partida».</p><div class="acts"><button class="btn ghost" onclick="dlg.close()">Cancelar</button><button class="btn del" id="dok">Eliminar partida</button></div></dialog>
-<div class="toast" id="toast" role="status"></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-/* ---------- SUPABASE: ACCESSO A DATOS ---------- */
-const SUPABASE_URL="https://rejeouhijlpimnwxyxjp.supabase.co";
-const SUPABASE_KEY="sb_publishable_YpZvFglWUEW_iM1XzEHz4Q_SsuIsFrg";
-const db=window.supabase&&window.supabase.createClient?window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:false}}):null;
-const M={seasons:[],players:[],games:[]},state={season:null,f:0};
-let databaseOnline=false;
-const $=id=>document.getElementById(id);
-function setStatus(ok,msg){databaseOnline=!!ok;const e=$("supabaseStatus");if(e){e.classList.toggle("off",!ok);e.innerHTML='<i class="dot"></i>'+(msg||(ok?"Supabase en línea":"Supabase sin conexión"))}document.querySelectorAll("[data-write]").forEach(b=>b.disabled=!ok)}
-function requireBackend(){if(databaseOnline)return true;toast("Supabase no está confirmado: no se ha enviado ni guardado nada.");return false}
-function reportFailure(e){const msg=e&&e.message||"No se pudo completar la operación.";if(!navigator.onLine||/fetch|network|offline|timeout/i.test(msg))setStatus(false);toast(msg)}
-const Repo={
- async getSeasons(){const r=await db.from("seasons").select("*").order("name");if(r.error)throw r.error;return r.data||[]},
- async getPlayers(){const r=await db.from("players").select("*").order("name");if(r.error)throw r.error;return r.data||[]},
- async getGames(){const r=await db.from("games").select("id,legacy_id,season_id,played_at,player_count,seasons(name),game_results(position,player_id,victory_points,players(name))").order("played_at",{ascending:true}).limit(2000);if(r.error)throw r.error;return(r.data||[]).map(g=>({id:g.id,legacyId:g.legacy_id,seasonId:g.season_id,date:g.played_at,playerCount:g.player_count,results:(g.game_results||[]).map(x=>({playerId:x.player_id,position:x.position,vp:x.victory_points,playerName:x.players&&x.players.name||""})).sort((x,y)=>x.position-y.position)}))},
- async getGameResults(){return M.games.flatMap(g=>g.results.map(r=>({...r,gameId:g.id})))},
- async createPlayer(name){const r=await db.from("players").insert({name}).select("*").single();if(r.error)throw r.error;return r.data},
- async createSeason(s){const r=await db.from("seasons").insert({name:s.name,is_active:true}).select("*").single();if(r.error)throw r.error;return r.data},
- async createGame(g){const r=await db.rpc("record_game",{p_season_id:g.seasonId,p_played_at:g.date,p_results:g.results.map(x=>({player_id:x.playerId,position:x.position,victory_points:x.vp}))});if(r.error)throw r.error},
- async updateGame(id,g){const u=await db.from("games").update({season_id:g.seasonId,played_at:g.date,player_count:g.results.length}).eq("id",id);if(u.error)throw u.error;const d=await db.from("game_results").delete().eq("game_id",id);if(d.error)throw d.error;const i=await db.from("game_results").insert(g.results.map(x=>({game_id:id,player_id:x.playerId,position:x.position,victory_points:x.vp})));if(i.error)throw i.error},
- async deleteGame(id){const r=await db.from("games").delete().eq("id",id);if(r.error)throw r.error}
-};
-async function load(){if(!db)throw new Error("No se cargó el cliente de Supabase.");setStatus(false,"Conectando con Supabase…");const r=await Promise.race([Promise.all([Repo.getSeasons(),Repo.getPlayers(),Repo.getGames()]),new Promise((_,reject)=>setTimeout(()=>reject(new Error('Supabase no respondió a tiempo')),12000))]);M.seasons=r[0].map(s=>({id:s.id,name:s.name,start:s.start_date||null,end:s.end_date||null,isActive:!!s.is_active}));M.players=r[1].map(p=>({id:p.id,name:p.name}));M.games=r[2];for(const s of M.seasons){const dates=M.games.filter(g=>g.seasonId==s.id).map(g=>g.date).filter(Boolean).sort();if(!s.start)s.start=dates[0]||null;if(!s.end)s.end=dates[dates.length-1]||null}M.games.sort((x,y)=>x.date<y.date?-1:x.date>y.date?1:Number(x.id)-Number(y.id));if(!M.seasons.some(s=>s.id==state.season))state.season=M.seasons.find(s=>s.isActive)?.id||M.seasons[0]?.id||null;if(!M.seasons.some(s=>s.id==state.f))state.f=state.season||0;setStatus(true)}
-function openSeason(){if(!requireBackend())return;$("sn").value="";$("sv").value="normal";$("serr").textContent="";$("sdlg").showModal();$("sn").focus()}
-async function addSeason(){
- if(!requireBackend())return;
- const name=$("sn").value.trim(),variant=$("sv").value,err=$("serr"),btn=document.querySelector('#sdlg [onclick="addSeason()"]');
- const prefix={normal:"Normal",navegantes:"Navegantes",ck:"C&K"}[variant]||"Normal",seasonName=prefix+" - "+name;
- if(name.length<2||name.length>67){err.textContent="El nombre debe tener entre 2 y 67 caracteres.";return}
- if(M.seasons.some(s=>s.name.trim().toLocaleLowerCase()===seasonName.toLocaleLowerCase())){err.textContent="Ya existe una temporada con ese nombre.";return}
- if(btn)btn.disabled=true;err.textContent="";
- try{
-  const created=await Repo.createSeason({name:seasonName});
-  await load();
-  state.season=Number(created.id);state.f=Number(created.id);
-  $("sdlg").close();route();toast("Temporada guardada en Supabase");
- }catch(e){
-  if(e&&e.code==="23505")err.textContent="Ya existe una temporada con ese nombre.";
-  else if(err)err.textContent="No se pudo guardar la temporada en Supabase. "+(e&&e.message||"Comprueba la conexión e inténtalo de nuevo.");
-  reportFailure(e);
- }finally{if(btn)btn.disabled=!databaseOnline}
-}
+  <dialog id="dlg-del-season">
+    <h2>Borrar temporada</h2>
+    <p id="del-season-msg" class="sub"></p>
+    <div class="acts">
+      <button type="button" class="btn-quiet" data-act="close-dialog">Cancelar</button>
+      <button type="button" class="btn-danger" data-act="confirm-del-season">Borrar temporada</button>
+    </div>
+  </dialog>
 
-/* ---------- 3. DOMINIO: Score Amigos y estadísticas derivadas ---------- */
-const MULT={3:1,4:1.2,5:1.3,6:1.5};
-const scoreAmigos=(n,pos)=>+((n-pos)*MULT[n]).toFixed(2);
-const pname=id=>(M.players.find(p=>p.id==id)||{}).name||'?',sname=id=>(M.seasons.find(s=>s.id==id)||{}).name||'';
-const inScope=s=>M.games.filter(g=>!s||g.seasonId==s);
-function playerStats(pid,s){const rs=inScope(s).flatMap(g=>g.results.filter(r=>r.playerId==pid).map(r=>{const n=g.results.length;return{...r,gameId:g.id,seasonId:g.seasonId,date:g.date,n,sa:scoreAmigos(n,r.position)}}));
- const k=rs.length,tot=rs.reduce((a,r)=>a+r.sa,0),vpTot=rs.reduce((a,r)=>a+(+r.vp||0),0),vpBest=rs.reduce((a,r)=>Math.max(a,+r.vp||0),0);
- return{pid,name:pname(pid),k,w:rs.filter(r=>r.position==1).length,last:rs.filter(r=>r.position==r.n).length,total:tot,avg:k?tot/k:0,pm:k?rs.reduce((a,r)=>a+r.position,0)/k:0,avgVp:k?vpTot/k:0,bestVp:vpBest,rs}}
-const standings=s=>M.players.map(p=>playerStats(p.id,s)).filter(x=>x.k).sort((a,b)=>b.avg-a.avg||b.k-a.k||b.total-a.total);
-const wr=x=>x.k?100*x.w/x.k:0,lr=x=>x.k?100*x.last/x.k:0;
-function biggestWin(scope){return inScope(scope).map(g=>{const r=g.results.slice().sort((a,b)=>b.vp-a.vp||a.position-b.position);if(r.length<2)return null;const margin=Number(r[0].vp)-Number(r[1].vp);return margin>0?{game:g,winner:pname(r[0].playerId),runner:pname(r[1].playerId),winnerVp:r[0].vp,runnerVp:r[1].vp,margin}:null}).filter(Boolean).sort((a,b)=>b.margin-a.margin||String(a.game.date).localeCompare(String(b.game.date)))[0]||null}
-function evoSeries(s){const L=standings(s),run={};L.forEach(x=>run[x.pid]={t:0,k:0});const out=L.map(x=>({c:res(x.pid),name:x.name,pid:x.pid,pts:[]}));
- inScope(s).forEach(g=>out.forEach(o=>{const r=g.results.find(r=>r.playerId==o.pid),u=run[o.pid];if(r){u.t+=scoreAmigos(g.results.length,r.position);u.k++}o.pts.push(r?u.t/u.k:null)}));return out}
-
-function blowoutCard(x,title){return`<article class="sheet blowout"><span class="label">${title}</span><strong>${x?`${x.winner} · +${x.margin} PV`:"Aún no hay diferencia positiva"}</strong><p>${x?`${x.winnerVp}–${x.runnerVp} PV frente a ${x.runner}, el ${dm(x.game.date)}.`:"Comparamos los PV del 1.º y 2.º puesto de cada partida."}</p></article>`}
-
-/* ---------- 4. PRESENTACIÓN ---------- */
-const RES=['brick','wool','water','grain','ore','wood'];
-const res=id=>RES[Math.max(0,M.players.findIndex(p=>p.id==id))%6];
-const fx=(v,d=1)=>(+v).toFixed(d).replace('.',','),f=v=>String(+(+v).toFixed(2)).replace('.',','),pc=v=>fx(v,0)+'%';
-const dm=d=>d?new Date(d+'T12:00').toLocaleDateString('es-ES',{day:'numeric',month:'short'}).replace('.',''):'—';
-const rng=s=>{if(!s||!s.start||!s.end)return 'Fechas por definir';const a=new Date(s.start+'T12:00'),b=new Date(s.end+'T12:00'),m=d=>d.getDate()+' '+d.toLocaleDateString('es-ES',{month:'short'}).replace('.','').toUpperCase();return m(a)+' — '+m(b)+' '+b.getFullYear()};
-const ic=(n,c,s=28)=>`<span class="hex" style="--c:var(--${c});--s:${s}px"><svg><use href="#${n}"/></svg></span>`,hx=(id,s)=>ic(res(id),res(id),s);
-const num=(v,d=0)=>`<span data-c="${v}" data-d="${d}">${fx(v,d)}</span>`,nf=()=>'<p class="sub" style="margin-top:44px">No se ha encontrado lo que buscas.</p>';
-const H=(t,s)=>`<h2 class="sec" style="margin-top:44px">${t}</h2><p class="sub">${s}</p>`;
-const chips=cur=>`<div class="season-panel"><select aria-label="Filtrar por temporada" onchange="setF(+this.value)"><option value="0" ${cur==0?'selected':''}>Todas las temporadas</option>${M.seasons.map(s=>`<option value="${s.id}" ${s.id==cur?'selected':''}>${s.name} · ${rng(s)}</option>`).join('')}</select></div>`;
-const meta=x=>`<span>${x.k} partidas</span><span>${x.w} victorias</span><span>posición media ${fx(x.pm,2)}</span><span>Score total ${fx(x.total)}</span>`;
-const empty='<p class="sub">Todavía no hay partidas en esta selección.</p>';
-function lb(s){const L=standings(s);if(!L.length)return empty;const lk=x=>`href="#/jugador/${x.pid}"`,sc=x=>`<div class="big">${num(x.avg,2)}<small>Score Amigos promedio</small></div>`;
- const t=L[0],p2=(x,i)=>`<a ${lk(x)} class="sheet p2"><span class="tok">${i+2}</span><div class="nm">${x.name} ${hx(x.pid,32)}</div>${sc(x)}<div class="meta">${meta(x)}</div></a>`;
- return`<ol class="lb"><li class="st"><a ${lk(t)} class="sheet p1" style="--i:0"><span class="tok w">1</span><div><div class="nm">${t.name} ${hx(t.pid,44)}</div><div class="meta" style="margin-top:10px">${meta(t)}</div></div>${sc(t)}</a></li>`
- +(L.length>1?`<li class="duo st" style="--i:1">${L.slice(1,3).map(p2).join('')}</li>`:'')+(L.length>3?'<li><div class="road"></div></li>':'')
- +L.slice(3).map((x,i)=>`<li class="st" style="--i:${i+3}"><a ${lk(x)} class="rw"><span class="tok">${i+4}</span><span class="nm">${x.name} ${hx(x.pid,26)}</span><span class="sc">${num(x.avg,2)}</span><span class="meta">${meta(x)}</span></a></li>`).join('')+'</ol>'}
-function gm(g,i=0,act){const n=g.results.length,R=g.results.slice().sort((a,b)=>a.position-b.position);
- return`<article class="sheet gm st" style="--i:${i}"><div class="dt">${dm(g.date)}<small>${sname(g.seasonId)}, ${n} jugadores</small></div><div class="ln">${R.map(r=>`<div class="pl"><span class="tok ${r.position==1?'w':''}">${r.position}</span><span class="nm">${pname(r.playerId)}</span><em>${r.vp} PV</em><b title="Score Amigos">${f(scoreAmigos(n,r.position))}</b></div>`).join('')}${act?`<div class="acts"><a class="mini" href="#/editar/${g.id}">Editar</a><button class="mini dg" onclick="askDel(${g.id})">Eliminar partida…</button></div>`:''}</div></article>`}
-function form5(s){const L=standings(s),g=inScope(s).slice(-5);return`<div class="lb">${L.map(x=>`<div class="rw" style="grid-template-columns:32px 1fr auto">${hx(x.pid,28)}<span class="nm" style="font-size:1.25rem">${x.name}</span><span style="display:flex;gap:6px">${g.map(q=>{const r=q.results.find(r=>r.playerId==x.pid);return r?`<span class="tok ${r.position==1?'w':''}" style="--s:30px">${r.position}</span>`:'<span class="tok" style="--s:30px;opacity:.25">-</span>'}).join('')}</span></div>`).join('')}</div>`}
-function home(){const s=M.seasons.find(x=>x.id==state.season)||M.seasons[0],gg=inScope(s.id),last=gg[gg.length-1],L=standings(s.id),leader=L[0],wins=leader?.w||0,winPct=leader?.k?100*wins/leader.k:0,close=gg.map(g=>{const R=g.results.slice().sort((a,b)=>b.vp-a.vp);return{g,diff:R.length>1?R[0].vp-R[1].vp:null}}).filter(x=>x.diff!==null).sort((a,b)=>a.d-b.d)[0];
- return`<section class="hero"><div class="island-world" aria-hidden="true"><svg viewBox="0 0 960 540" preserveAspectRatio="xMidYMid slice" role="presentation"><defs>
-<linearGradient id="map-sea" x1="0" y1="0" x2=".2" y2="1"><stop stop-color="#338da2"/><stop offset=".46" stop-color="#145d78"/><stop offset="1" stop-color="#082e49"/></linearGradient>
-<linearGradient id="tile-forest" x2=".8" y2="1"><stop stop-color="#71ac54"/><stop offset="1" stop-color="#326143"/></linearGradient><linearGradient id="tile-wheat" x2=".7" y2="1"><stop stop-color="#ffda51"/><stop offset="1" stop-color="#c78725"/></linearGradient><linearGradient id="tile-pasture" x2=".8" y2="1"><stop stop-color="#afd05e"/><stop offset="1" stop-color="#5c8543"/></linearGradient><linearGradient id="tile-hill" x2=".7" y2="1"><stop stop-color="#e17c48"/><stop offset="1" stop-color="#963e30"/></linearGradient><linearGradient id="tile-mountain" x2=".8" y2="1"><stop stop-color="#a8b6b3"/><stop offset="1" stop-color="#536c78"/></linearGradient><linearGradient id="tile-desert" x2=".6" y2="1"><stop stop-color="#edc979"/><stop offset="1" stop-color="#bf8c4a"/></linearGradient>
-<pattern id="wave-lines" width="150" height="78" patternUnits="userSpaceOnUse"><path d="M0 20q32-11 64 0t64 0M-32 56q32-11 64 0t64 0 64 0" fill="none" stroke="#bce0d8" stroke-width="1.8"/></pattern><filter id="piece-shadow" x="-40%" y="-40%" width="180%" height="190%"><feDropShadow dx="0" dy="2" stdDeviation="1.7" flood-color="#142b32" flood-opacity=".72"/></filter></defs>
-<rect width="960" height="540" class="map-water"/><rect width="960" height="540" class="water-grain"/>
-<g class="map-cloud" fill="#f6f0df" opacity=".26"><ellipse cx="165" cy="57" rx="84" ry="13"/><ellipse cx="198" cy="50" rx="34" ry="17"/></g><g class="map-cloud alt" fill="#f6f0df" opacity=".2"><ellipse cx="785" cy="95" rx="106" ry="13"/><ellipse cx="819" cy="88" rx="40" ry="17"/></g>
-<g class="boat-pass"><g class="boat-bob"><g class="boat-wake" fill="none" stroke="#d6eee5" stroke-width="2.6"><path d="M10 484q40-10 80 0t80 0m-142 12q33-8 66 0t66 0"/></g><path d="M41 456h96l-14 22H56z" fill="#744a30" stroke="#e5c790" stroke-width="2"/><path d="M56 460h72m-58 8h45" stroke="#cba36d" stroke-width="1.8"/><path d="M90 455v-42" stroke="#e6d5b0" stroke-width="3.4"/><path d="M87 417l-24 34h24z" fill="#fff0ce" stroke="#634a32" stroke-width="1.7"/><path d="M96 421l30 30H96z" fill="#dcc99e" stroke="#634a32" stroke-width="1.7"/><path d="M91 407l16 7-16 7z" fill="#c63d30"/></g></g>
-<g class="island-board" transform="translate(480 270) scale(.82) translate(-480 -270)"><g transform="translate(380 96)"><g class="tile-reveal" style="--delay:0.06s"><defs><clipPath id="hex-0" clipPathUnits="userSpaceOnUse"><polygon points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29"/></clipPath></defs><polygon class="tile-face tile-forest" points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29"/><g class="hex-detail" style="--hex-clip:url(#hex-0)" clip-path="url(#hex-0)"><g><path class="forest-tree" d="M-28 11l14-30L0 11h-8l10 15h-29l9-15z"/><path class="forest-tree" d="M5 8l13-27L32 8h-8l9 14H1l9-14z"/><path class="forest-trunk" d="M-14 13v9M19 10v9"/></g><circle class="number-disc" cx="0" cy="0" r="10"/><text class="number-text" x="0" y="1">5</text></g><polygon points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29" fill="none" stroke="#f5e8c7" stroke-width="2.3" opacity=".8"/></g></g><g transform="translate(480 96)"><g class="tile-reveal" style="--delay:0.095s"><defs><clipPath id="hex-1" clipPathUnits="userSpaceOnUse"><polygon points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29"/></clipPath></defs><polygon class="tile-face tile-wheat" points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29"/><g class="hex-detail" style="--hex-clip:url(#hex-1)" clip-path="url(#hex-1)"><g class="wheat-row"><path d="M-28 22q6-36 19-49M-10 23Q-6-9 8-28M8 23q2-30 15-47M26 21q0-23 11-39"/><path d="M-24 5l-8-8m24-4-9-8M-5 7l-9-9M13 5 4-5M30 7l-9-9"/></g><circle class="number-disc" cx="0" cy="0" r="10"/><text class="number-text" x="0" y="1">9</text></g><polygon points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29" fill="none" stroke="#f5e8c7" stroke-width="2.3" opacity=".8"/></g></g><g transform="translate(580 96)"><g class="tile-reveal" style="--delay:0.13s"><defs><clipPath id="hex-2" clipPathUnits="userSpaceOnUse"><polygon points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29"/></clipPath></defs><polygon class="tile-face tile-pasture" points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29"/><g class="hex-detail" style="--hex-clip:url(#hex-2)" clip-path="url(#hex-2)"><g><path class="pasture-mark" d="M-30 12Q-40 1-29-4q9-1 8 8 3-15 14-9 7 8-3 17M3 19Q-5 7 5 3q9 0 9 8 4-14 14-7 5 8-4 16"/></g><circle class="number-disc" cx="0" cy="0" r="10"/><text class="number-text" x="0" y="1">4</text></g><polygon points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29" fill="none" stroke="#f5e8c7" stroke-width="2.3" opacity=".8"/></g></g><g transform="translate(330 183)"><g class="tile-reveal" style="--delay:0.165s"><defs><clipPath id="hex-3" clipPathUnits="userSpaceOnUse"><polygon points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29"/></clipPath></defs><polygon class="tile-face tile-pasture" points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29"/><g class="hex-detail" style="--hex-clip:url(#hex-3)" clip-path="url(#hex-3)"><g><path class="pasture-mark" d="M-30 12Q-40 1-29-4q9-1 8 8 3-15 14-9 7 8-3 17M3 19Q-5 7 5 3q9 0 9 8 4-14 14-7 5 8-4 16"/></g><circle class="number-disc" cx="0" cy="0" r="10"/><text class="number-text" x="0" y="1">10</text></g><polygon points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29" fill="none" stroke="#f5e8c7" stroke-width="2.3" opacity=".8"/></g></g><g transform="translate(430 183)"><g class="tile-reveal" style="--delay:0.2s"><defs><clipPath id="hex-4" clipPathUnits="userSpaceOnUse"><polygon points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29"/></clipPath></defs><polygon class="tile-face tile-hill" points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29"/><g class="hex-detail" style="--hex-clip:url(#hex-4)" clip-path="url(#hex-4)"><g><path class="hill-mark" d="M-32 12Q0-18 32 12v12h-64z"/><path d="M-19 13q19-11 38 0M-25 20q25-10 50 0" fill="none" stroke="#f4c27e" stroke-width="1.4"/></g><circle class="number-disc" cx="0" cy="0" r="10"/><text class="number-text" x="0" y="1">6</text></g><polygon points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29" fill="none" stroke="#f5e8c7" stroke-width="2.3" opacity=".8"/></g></g><g transform="translate(530 183)"><g class="tile-reveal" style="--delay:0.23500000000000001s"><defs><clipPath id="hex-5" clipPathUnits="userSpaceOnUse"><polygon points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29"/></clipPath></defs><polygon class="tile-face tile-forest" points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29"/><g class="hex-detail" style="--hex-clip:url(#hex-5)" clip-path="url(#hex-5)"><g><path class="forest-tree" d="M-28 11l14-30L0 11h-8l10 15h-29l9-15z"/><path class="forest-tree" d="M5 8l13-27L32 8h-8l9 14H1l9-14z"/><path class="forest-trunk" d="M-14 13v9M19 10v9"/></g><circle class="number-disc" cx="0" cy="0" r="10"/><text class="number-text" x="0" y="1">3</text></g><polygon points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29" fill="none" stroke="#f5e8c7" stroke-width="2.3" opacity=".8"/></g></g><g transform="translate(630 183)"><g class="tile-reveal" style="--delay:0.27s"><defs><clipPath id="hex-6" clipPathUnits="userSpaceOnUse"><polygon points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29"/></clipPath></defs><polygon class="tile-face tile-mountain" points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29"/><g class="hex-detail" style="--hex-clip:url(#hex-6)" clip-path="url(#hex-6)"><g><path class="mountain-mark" d="M-31 20l11-28 12-7 10 14 13-24 18 45z"/><path d="M-20-7l12 0-7 16m17-20 9 14 12-16" fill="none" stroke="#edf0dc" stroke-width="1.8"/></g><circle class="number-disc" cx="0" cy="0" r="10"/><text class="number-text" x="0" y="1">11</text></g><polygon points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29" fill="none" stroke="#f5e8c7" stroke-width="2.3" opacity=".8"/></g></g><g transform="translate(280 270)"><g class="tile-reveal" style="--delay:0.30500000000000005s"><defs><clipPath id="hex-7" clipPathUnits="userSpaceOnUse"><polygon points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29"/></clipPath></defs><polygon class="tile-face tile-wheat" points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29"/><g class="hex-detail" style="--hex-clip:url(#hex-7)" clip-path="url(#hex-7)"><g class="wheat-row"><path d="M-28 22q6-36 19-49M-10 23Q-6-9 8-28M8 23q2-30 15-47M26 21q0-23 11-39"/><path d="M-24 5l-8-8m24-4-9-8M-5 7l-9-9M13 5 4-5M30 7l-9-9"/></g><circle class="number-disc" cx="0" cy="0" r="10"/><text class="number-text" x="0" y="1">8</text></g><polygon points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29" fill="none" stroke="#f5e8c7" stroke-width="2.3" opacity=".8"/></g></g><g transform="translate(380 270)"><g class="tile-reveal" style="--delay:0.34s"><defs><clipPath id="hex-8" clipPathUnits="userSpaceOnUse"><polygon points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29"/></clipPath></defs><polygon class="tile-face tile-mountain" points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29"/><g class="hex-detail" style="--hex-clip:url(#hex-8)" clip-path="url(#hex-8)"><g><path class="mountain-mark" d="M-31 20l11-28 12-7 10 14 13-24 18 45z"/><path d="M-20-7l12 0-7 16m17-20 9 14 12-16" fill="none" stroke="#edf0dc" stroke-width="1.8"/></g><circle class="number-disc" cx="0" cy="0" r="10"/><text class="number-text" x="0" y="1">12</text></g><polygon points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29" fill="none" stroke="#f5e8c7" stroke-width="2.3" opacity=".8"/></g></g><g transform="translate(480 270)"><g class="tile-reveal" style="--delay:0.37500000000000006s"><defs><clipPath id="hex-9" clipPathUnits="userSpaceOnUse"><polygon points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29"/></clipPath></defs><polygon class="tile-face tile-desert" points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29"/><g class="hex-detail" style="--hex-clip:url(#hex-9)" clip-path="url(#hex-9)"><g class="desert-dune"><path d="M-33 13q15-19 32 0 16-20 34 0M-25 22q13-12 26 0 14-12 28 0"/><circle cx="-18" cy="-5" r="2" fill="#ffe2a0"/><circle cx="22" cy="-12" r="1.8" fill="#ffe2a0"/></g></g><polygon points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29" fill="none" stroke="#f5e8c7" stroke-width="2.3" opacity=".8"/></g></g><g transform="translate(580 270)"><g class="tile-reveal" style="--delay:0.41000000000000003s"><defs><clipPath id="hex-10" clipPathUnits="userSpaceOnUse"><polygon points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29"/></clipPath></defs><polygon class="tile-face tile-pasture" points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29"/><g class="hex-detail" style="--hex-clip:url(#hex-10)" clip-path="url(#hex-10)"><g><path class="pasture-mark" d="M-30 12Q-40 1-29-4q9-1 8 8 3-15 14-9 7 8-3 17M3 19Q-5 7 5 3q9 0 9 8 4-14 14-7 5 8-4 16"/></g><circle class="number-disc" cx="0" cy="0" r="10"/><text class="number-text" x="0" y="1">5</text></g><polygon points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29" fill="none" stroke="#f5e8c7" stroke-width="2.3" opacity=".8"/></g></g><g transform="translate(680 270)"><g class="tile-reveal" style="--delay:0.445s"><defs><clipPath id="hex-11" clipPathUnits="userSpaceOnUse"><polygon points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29"/></clipPath></defs><polygon class="tile-face tile-hill" points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29"/><g class="hex-detail" style="--hex-clip:url(#hex-11)" clip-path="url(#hex-11)"><g><path class="hill-mark" d="M-32 12Q0-18 32 12v12h-64z"/><path d="M-19 13q19-11 38 0M-25 20q25-10 50 0" fill="none" stroke="#f4c27e" stroke-width="1.4"/></g><circle class="number-disc" cx="0" cy="0" r="10"/><text class="number-text" x="0" y="1">9</text></g><polygon points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29" fill="none" stroke="#f5e8c7" stroke-width="2.3" opacity=".8"/></g></g><g transform="translate(330 357)"><g class="tile-reveal" style="--delay:0.48000000000000004s"><defs><clipPath id="hex-12" clipPathUnits="userSpaceOnUse"><polygon points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29"/></clipPath></defs><polygon class="tile-face tile-hill" points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29"/><g class="hex-detail" style="--hex-clip:url(#hex-12)" clip-path="url(#hex-12)"><g><path class="hill-mark" d="M-32 12Q0-18 32 12v12h-64z"/><path d="M-19 13q19-11 38 0M-25 20q25-10 50 0" fill="none" stroke="#f4c27e" stroke-width="1.4"/></g><circle class="number-disc" cx="0" cy="0" r="10"/><text class="number-text" x="0" y="1">4</text></g><polygon points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29" fill="none" stroke="#f5e8c7" stroke-width="2.3" opacity=".8"/></g></g><g transform="translate(430 357)"><g class="tile-reveal" style="--delay:0.5150000000000001s"><defs><clipPath id="hex-13" clipPathUnits="userSpaceOnUse"><polygon points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29"/></clipPath></defs><polygon class="tile-face tile-wheat" points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29"/><g class="hex-detail" style="--hex-clip:url(#hex-13)" clip-path="url(#hex-13)"><g class="wheat-row"><path d="M-28 22q6-36 19-49M-10 23Q-6-9 8-28M8 23q2-30 15-47M26 21q0-23 11-39"/><path d="M-24 5l-8-8m24-4-9-8M-5 7l-9-9M13 5 4-5M30 7l-9-9"/></g><circle class="number-disc" cx="0" cy="0" r="10"/><text class="number-text" x="0" y="1">10</text></g><polygon points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29" fill="none" stroke="#f5e8c7" stroke-width="2.3" opacity=".8"/></g></g><g transform="translate(530 357)"><g class="tile-reveal" style="--delay:0.55s"><defs><clipPath id="hex-14" clipPathUnits="userSpaceOnUse"><polygon points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29"/></clipPath></defs><polygon class="tile-face tile-forest" points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29"/><g class="hex-detail" style="--hex-clip:url(#hex-14)" clip-path="url(#hex-14)"><g><path class="forest-tree" d="M-28 11l14-30L0 11h-8l10 15h-29l9-15z"/><path class="forest-tree" d="M5 8l13-27L32 8h-8l9 14H1l9-14z"/><path class="forest-trunk" d="M-14 13v9M19 10v9"/></g><circle class="number-disc" cx="0" cy="0" r="10"/><text class="number-text" x="0" y="1">6</text></g><polygon points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29" fill="none" stroke="#f5e8c7" stroke-width="2.3" opacity=".8"/></g></g><g transform="translate(630 357)"><g class="tile-reveal" style="--delay:0.585s"><defs><clipPath id="hex-15" clipPathUnits="userSpaceOnUse"><polygon points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29"/></clipPath></defs><polygon class="tile-face tile-mountain" points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29"/><g class="hex-detail" style="--hex-clip:url(#hex-15)" clip-path="url(#hex-15)"><g><path class="mountain-mark" d="M-31 20l11-28 12-7 10 14 13-24 18 45z"/><path d="M-20-7l12 0-7 16m17-20 9 14 12-16" fill="none" stroke="#edf0dc" stroke-width="1.8"/></g><circle class="number-disc" cx="0" cy="0" r="10"/><text class="number-text" x="0" y="1">3</text></g><polygon points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29" fill="none" stroke="#f5e8c7" stroke-width="2.3" opacity=".8"/></g></g><g transform="translate(380 444)"><g class="tile-reveal" style="--delay:0.6200000000000001s"><defs><clipPath id="hex-16" clipPathUnits="userSpaceOnUse"><polygon points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29"/></clipPath></defs><polygon class="tile-face tile-pasture" points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29"/><g class="hex-detail" style="--hex-clip:url(#hex-16)" clip-path="url(#hex-16)"><g><path class="pasture-mark" d="M-30 12Q-40 1-29-4q9-1 8 8 3-15 14-9 7 8-3 17M3 19Q-5 7 5 3q9 0 9 8 4-14 14-7 5 8-4 16"/></g><circle class="number-disc" cx="0" cy="0" r="10"/><text class="number-text" x="0" y="1">11</text></g><polygon points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29" fill="none" stroke="#f5e8c7" stroke-width="2.3" opacity=".8"/></g></g><g transform="translate(480 444)"><g class="tile-reveal" style="--delay:0.655s"><defs><clipPath id="hex-17" clipPathUnits="userSpaceOnUse"><polygon points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29"/></clipPath></defs><polygon class="tile-face tile-forest" points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29"/><g class="hex-detail" style="--hex-clip:url(#hex-17)" clip-path="url(#hex-17)"><g><path class="forest-tree" d="M-28 11l14-30L0 11h-8l10 15h-29l9-15z"/><path class="forest-tree" d="M5 8l13-27L32 8h-8l9 14H1l9-14z"/><path class="forest-trunk" d="M-14 13v9M19 10v9"/></g><circle class="number-disc" cx="0" cy="0" r="10"/><text class="number-text" x="0" y="1">8</text></g><polygon points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29" fill="none" stroke="#f5e8c7" stroke-width="2.3" opacity=".8"/></g></g><g transform="translate(580 444)"><g class="tile-reveal" style="--delay:0.6900000000000002s"><defs><clipPath id="hex-18" clipPathUnits="userSpaceOnUse"><polygon points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29"/></clipPath></defs><polygon class="tile-face tile-wheat" points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29"/><g class="hex-detail" style="--hex-clip:url(#hex-18)" clip-path="url(#hex-18)"><g class="wheat-row"><path d="M-28 22q6-36 19-49M-10 23Q-6-9 8-28M8 23q2-30 15-47M26 21q0-23 11-39"/><path d="M-24 5l-8-8m24-4-9-8M-5 7l-9-9M13 5 4-5M30 7l-9-9"/></g><circle class="number-disc" cx="0" cy="0" r="10"/><text class="number-text" x="0" y="1">5</text></g><polygon points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29" fill="none" stroke="#f5e8c7" stroke-width="2.3" opacity=".8"/></g></g>
-<g class="edge-road" transform="translate(455 140) rotate(30)"><rect class="road-side" x="-13" y="-3.5" width="26" height="7" rx="2"/><rect class="road-wood" x="-13" y="-5" width="26" height="6" rx="2"/></g><g class="edge-road" transform="translate(505 227) rotate(30)"><rect class="road-side" x="-13" y="-3.5" width="26" height="7" rx="2"/><rect class="road-wood" x="-13" y="-5" width="26" height="6" rx="2"/></g>
-<g class="settlement-piece" transform="translate(430 125)"><path class="settlement-wall" d="M-6 1L0-5 6 1v8h-12z"/><path class="settlement-roof" d="M-8 1L0-7 8 1l-2 2L0-3-6 3z"/></g><g class="settlement-piece" transform="translate(480 212)"><path class="settlement-wall" d="M-6 1L0-5 6 1v8h-12z"/><path class="settlement-roof" d="M-8 1L0-7 8 1l-2 2L0-3-6 3z"/></g>
-<g class="robber-in" transform="translate(480 270)"><g class="robber-hop"><ellipse class="robber-shadow" cx="0" cy="13" rx="7" ry="2.5"/><path class="robber-body" d="M-4 8q-3-8-1-14l-3-5 8 2 8-3-3 7q2 7 0 13z"/><path class="robber-body" d="M-6-10q0-9 6-10 7 2 7 10L0-13z"/><path class="robber-glint" d="M-2-7h4m-2 0v11"/></g></g></g></svg></div><div class="hero-copy"><h1>CATAN<br>AMIGOS</h1><div class="sl"><span>${s.name}</span><span>${rng(s)}</span></div></div></section>
-<h2 class="sec">Clasificación oficial</h2><p class="sub">Score Amigos promedio en la ${s.name}. Pulsa un nombre para ver su ficha.</p>${lb(s.id)}
-<div style="margin:6px 0 8px"><a class="chip" href="#/temporadas">Ver clasificación completa</a></div><div class="road"></div>
-<h2 class="sec">Última partida</h2><p class="sub">${last?'Registrada el '+dm(last.date)+'.':''}</p>${last?gm(last):empty}
-<div class="road"></div><h2 class="sec">La temporada en cifras</h2><p class="sub">Cuatro datos para entender cómo va la competición.</p>
-<div class="insights"><article class="sheet insight" style="--accent:var(--ore)"><span class="label">Partidas jugadas</span><b class="value">${num(gg.length)}</b><span class="detail">${gg.length===1?'partida registrada':'partidas registradas'}</span></article><article class="sheet insight leader" style="--accent:var(--brick)"><span class="label">Líder de la temporada</span><b class="value">${leader?leader.name:'—'}</b><span class="detail">${leader?`${fx(leader.avg,2)} Score Amigos de media`:'Aún sin clasificación'}</span></article><article class="sheet insight" style="--accent:var(--grain)"><span class="label">Victorias del líder</span><b class="value">${leader?num(wins):'—'}</b><span class="detail">${leader?`${pc(winPct)} de sus partidas`:'Sin partidas'}</span></article><article class="sheet insight" style="--accent:var(--wool)"><span class="label">Margen más ajustado</span><b class="value">${close?`${close.diff} PV`:'—'}</b><span class="detail">${close?`en la partida del ${dm(close.g.date)}`:'Faltan resultados'}</span></article></div>
-<div class="road"></div><h2 class="sec">Racha reciente</h2><p class="sub">Posición final en las últimas cinco partidas. En rojo, las victorias.</p>${form5(s.id)}`}
-function seasons(){const s=M.seasons.find(x=>x.id==state.season)||M.seasons[0];
- return`${H('Archivo del torneo','Cada temporada tiene su propia historia y clasificación. Selecciona una etapa para explorarla.')}<div class="season-panel"><select aria-label="Seleccionar temporada" onchange="setSeason(+this.value)">${M.seasons.map(x=>`<option value="${x.id}" ${x.id==s.id?'selected':''}>${x.name} · ${rng(x)}</option>`).join('')} </select><button class="btn" onclick="openSeason()" type="button" data-write disabled>+ Nueva temporada</button><a class="btn ghost" href="#/historico">Clasificación histórica</a></div><div class="pgrid">${M.seasons.map(x=>{const L=standings(x.id),ww=[...L].sort((a,b)=>b.w-a.w)[0],ll=[...L].sort((a,b)=>b.last-a.last)[0],bw=biggestWin(x.id);
- return`<div class="season-entry"><button class="sheet pc ${x.id==s.id?'sel':''}" onclick="setSeason(${x.id})"><h2 style="font-size:2.4rem">${x.name}</h2><div class="meta"><span>${rng(x)}</span></div><div class="meta"><span>${inScope(x.id).length} partidas</span>${L[0]?`<span>Campeón: ${L[0].name}</span>`:''}</div>${ww?`<div class="meta"><span>Más victorias: ${ww.name} (${ww.w})</span><span>Más últimos puestos: ${ll.name} (${ll.last})</span></div>`:''}</button>${blowoutCard(bw,'Mayor paliza · PV')}</div>`}).join('')}</div>
-<div class="fd"><h2 class="sec">Clasificación, ${sname(s.id)}</h2><p class="sub">Ordenada por Score Amigos promedio.</p>${lb(s.id)}</div>`}
-function historical(){return`${H('Clasificación histórica','La clasificación de toda la historia de la mesa, sin importar la temporada.')}${blowoutCard(biggestWin(0),'Mayor paliza histórica · PV')}<div class="fd">${lb(0)}</div>`}
-
-function games(){const l=inScope(state.f).slice().reverse();return`${H('Partidas','El archivo completo: orden de llegada, puntos de victoria (PV) y, en negrita, el Score Amigos de cada jugador.')}${chips(state.f)}<div class="fd">${l.length?l.map((g,i)=>gm(g,Math.min(i,8),1)).join(''):empty}</div>`}
-const line=S=>{const W=700,H=260,L=58,R=52,T=24,B=38,n=Math.max(1,...S.map(s=>s.pts.length)),vals=S.flatMap(s=>s.pts.filter(v=>v!=null)),rawMin=Math.min(...vals),rawMax=Math.max(...vals),pad=Math.max((rawMax-rawMin)*.16,.12),low=Math.max(0,Math.floor((rawMin-pad)*10)/10),high=Math.ceil((rawMax+pad)*10)/10,span=Math.max(high-low,.2),step=span<=.6?.1:span<=1.2?.2:Math.ceil(span/4*10)/10,top=high,X=i=>L+i*(W-L-R)/Math.max(n-1,1),Y=v=>H-B-(v-low)*(H-T-B)/span,ticks=[];for(let v=Math.ceil(low/step)*step;v<=high+.0001;v+=step)ticks.push(+v.toFixed(2));
- return`<div class="chart-frame"><svg class="ln2" viewBox="0 0 ${W} ${H}" role="img" aria-label="Score Amigos promedio acumulado por partida. Eje vertical ajustado a los valores de esta gráfica.">${ticks.map(v=>{const y=Y(v);return`<line class="chart-grid" x1="${L}" x2="${W-R}" y1="${y}" y2="${y}"/><text class="chart-axis" x="${L-8}" y="${y+4}" text-anchor="end">${fx(v,1)}</text>`}).join('')}${[0,Math.floor((n-1)/2),n-1].filter((v,i,a)=>a.indexOf(v)===i).map(i=>`<text class="chart-axis" x="${X(i)}" y="${H-8}" text-anchor="middle">Partida ${i+1}</text>`).join('')}${S.map(s=>{const pts=s.pts.map((v,i)=>v==null?null:{x:X(i),y:Y(v),v,i}).filter(Boolean);if(!pts.length)return'';const d=pts.map((p,i)=>(i?'L':'M')+p.x.toFixed(1)+' '+p.y.toFixed(1)).join(' '),last=pts[pts.length-1];return`<path pathLength="1" stroke="var(--${s.c})" d="${d}"/>${pts.map(p=>`<circle class="chart-point" cx="${p.x}" cy="${p.y}" r="4" fill="var(--${s.c})"><title>${s.name} · partida ${p.i+1}: ${fx(p.v,2)} Score Amigos</title></circle>`).join('')}<text class="chart-value" x="${Math.min(last.x+7,W-R-48)}" y="${Math.max(T+11,last.y-8)}">${fx(last.v,2)}</text>`}).join('')}</svg></div>`};
-const bars=(L,fn,c,fm,mx)=>{const m=mx||Math.max(...L.map(fn),1);return L.map((x,i)=>`<div class="br"><span>${x.name}</span><div><i style="--c:var(--${c});--i:${i};width:${100*fn(x)/m}%"></i></div><b>${fm(fn(x))}</b></div>`).join('')};
-const CH=[['Score Amigos total','brick',x=>x.total,fx],['Score Amigos promedio','brick',x=>x.avg,v=>fx(v,2)],['Victorias','grain',x=>x.w,f],['Porcentaje de victorias','wool',wr,pc,100],['Partidas jugadas','ore',x=>x.k,f],['Posición media','water',x=>x.pm,v=>fx(v,2),6],['Porcentaje de últimos puestos','wood',lr,pc,100]];
-function stats(){const s=state.f,L=standings(s),E=standings(s).map(x=>{let total=0;return{c:res(x.pid),name:x.name,pid:x.pid,pts:x.rs.map((r,i)=>{total+=r.sa;return total/(i+1)})}}),GG=inScope(s);
- return`${H('Estadísticas','Rendimiento, regularidad y resultados de la mesa; selecciona una temporada o todas para comparar.')}${chips(s)}${L.length?`<div class="nums stats-count"><div style="--c:var(--ore)"><b>${num(GG.length)}</b><span>Partidas analizadas</span></div></div><div class="cs fd">${CH.map(([t,c,fn,fm,mx])=>`<div class="ch"><h3>${t}</h3>${bars(L,fn,c,fm,mx)}</div>`).join('')}<section class="ch evo-section"><h3>Evolución del Score Amigos promedio</h3><p class="sub">Cada línea muestra el promedio acumulado del jugador tras cada partida disputada. Cada gráfico tiene su propia escala; los valores y el número de partida aparecen en los ejes.</p><div class="evo-grid">${E.map(o=>`<article class="evo-card"><h4><span class="evo-key" style="--c:var(--${o.c})"></span>${o.name}</h4><p class="evo-value">Promedio actual: <b>${fx(o.pts[o.pts.length-1]||0,2)}</b> · ${o.pts.length} partidas</p>${line([{...o,pts:o.pts}])}</article>`).join('')}</div></section></div>`:empty}`}
-function players(){const s=state.f;return`${H('Jugadores','Toca un jugador para ver su ficha.')}${chips(s)}<div class="pgrid st">${M.players.map((p,i)=>{const x=playerStats(p.id,s);return`<a class="sheet pc" style="--i:${i}" href="#/jugador/${p.id}"><div class="nm">${p.name} ${hx(p.id,32)}</div>${x.k?`<div class="big" style="font-size:2.6rem">${num(x.avg,2)}<small>Score Amigos promedio</small></div><div class="meta"><span>${x.k} partidas</span><span>${x.w} victorias</span></div>`:'<div class="meta">Sin partidas en esta selección</div>'}</a>`}).join('')}</div>
-<div class="sheet form" style="max-width:none"><label>Añadir jugador<div class="fr"><input id="np" maxlength="40" placeholder="Nombre del jugador"><button class="btn" onclick="addP()" data-write disabled>Añadir</button></div></label></div>`}
-function player(id){const p=M.players.find(x=>x.id==id);if(!p)return nf();const s=state.f,x=playerStats(id,s),pos=standings(s).findIndex(y=>y.pid==id)+1;let run=0;const pts=x.rs.map((r,i)=>(run+=r.sa)/(i+1));
- return`<div class="prof" style="margin-top:44px">${hx(id,110)}<div><h2 style="font-size:clamp(3rem,10vw,6rem);font-weight:800;letter-spacing:-.04em">${p.name}</h2><p class="sub" style="margin:8px 0 0">${x.k?`Puesto ${pos} de ${standings(s).length} en la clasificación`:'Sin partidas en esta selección'}</p></div></div>${chips(s)}`
- +(x.k?`<div class="nums st">${[['brick',num(x.avg,2),'Score Amigos promedio'],['brick',num(x.total,1),'Score Amigos total'],['ore',num(x.k),'partidas jugadas'],['grain',num(x.w),'victorias'],['wool',num(wr(x),0)+'%','de victorias'],['water',num(x.pm,2),'posición media'],['wood',num(lr(x),0)+'%','últimos puestos'],['grain',num(x.avgVp,1)+' PV','PV promedio por partida'],['grain',num(x.bestVp)+' PV','récord de PV en una partida']].map(([c,v,l])=>`<div style="--c:var(--${c})"><b>${v}</b><span>${l}</span></div>`).join('')}</div>
-<div class="road"></div><h2 class="sec">Evolución</h2><p class="sub">Score Amigos promedio acumulado tras cada partida.</p>${line([{c:res(id),pts}])}
-<div class="road"></div><h2 class="sec">Partidas recientes</h2><div class="lb" style="margin-top:14px">${x.rs.slice(-8).reverse().map(r=>`<div class="pl" style="grid-template-columns:34px 80px 1fr auto auto"><span class="tok ${r.position==1?'w':''}">${r.position}</span><span class="nm">${dm(r.date)}</span><em>${sname(r.seasonId)}, ${r.n} jugadores</em><em>${r.vp} PV</em><b>${f(r.sa)}</b></div>`).join('')}</div>`:empty)}
-function rules(){const ex=[1,2,3,4].map(p=>scoreAmigos(4,p));
- return`${H('Reglas de puntuación','Los Puntos de Victoria deciden quién gana la partida. El Score Amigos decide el torneo.')}<div class="sheet formula">Score Amigos = (Número de jugadores − posición final) × multiplicador<small>Se promedia partida a partida y decide el ranking de la temporada. El último puesto suma 0.</small></div>
-<div class="road"></div><h2 class="sec">Multiplicador</h2><p class="sub">Cuantos más jugadores, más vale cada posición.</p><div class="mult">${[[3,'ore'],[4,'wool'],[5,'grain'],[6,'brick']].map(([n,c])=>`<div class="sheet" style="border-top:5px solid var(--${c})"><b>${fx(MULT[n])}</b>${n} jugadores</div>`).join('')}</div>
-<div class="road"></div><h2 class="sec">Ejemplo con 4 jugadores</h2><p class="sub">Multiplicador ${fx(MULT[4])}.</p><div class="sheet gm" style="grid-template-columns:1fr"><div class="ln">${ex.map((v,i)=>`<div class="pl"><span class="tok ${i?'':'w'}">${i+1}</span><span class="nm">(4 − ${i+1}) × ${fx(MULT[4])}</span><em></em><b>${f(v)}</b></div>`).join('')}</div></div>
-<div class="road"></div><div class="two"><div class="sheet"><h3>Puntos de Victoria (PV)</h3><p class="sub" style="margin:0">Los puntos que se cuentan en el tablero. Determinan la posición final de cada jugador, pero no suman directamente al torneo.</p></div><div class="sheet"><h3>Score Amigos</h3><p class="sub" style="margin:0">Los puntos del torneo. Salen de la posición final y del número de jugadores, nunca de los PV.</p></div></div>`}
-
-/* ---------- 5. REGISTRAR / EDITAR / ELIMINAR PARTIDAS ---------- */
-let F=null;
-function reg(id){const g=id?M.games.find(x=>x.id==id):null;if(id&&!g)return nf();
- F=g?{id:g.id,seasonId:g.seasonId,date:g.date,n:g.results.length,rows:g.results.slice().sort((a,b)=>a.position-b.position).map(r=>({pid:r.playerId,vp:r.vp})),tie:Object.fromEntries(g.results.map(r=>[r.playerId,r.position]))}
- :{id:0,seasonId:0,date:new Date().toISOString().slice(0,10),n:4,rows:Array.from({length:4},()=>({pid:0,vp:''})),tie:{}};
- return`${H(id?'Editar partida':'Registrar partida','Elige la temporada, la fecha y los jugadores con sus puntos de victoria. La posición final se calcula a partir de los PV.')}<div class="sheet form">
-<label>Temporada<select id="fs" onchange="F.seasonId=+this.value"><option value="0">Selecciona una temporada</option>${M.seasons.map(s=>`<option value="${s.id}" ${s.id==F.seasonId?'selected':''}>${s.name}, ${rng(s)}</option>`).join('')}</select></label>
-<label>Fecha<input type="date" id="fd" value="${F.date}" onchange="F.date=this.value"></label>
-<label>Número de jugadores<select id="fn" onchange="setN(+this.value)">${[3,4,5,6].map(n=>`<option ${n==F.n?'selected':''}>${n}</option>`).join('')}</select></label>
-<div id="fr" class="frs"></div><div id="pv"></div><div class="err" id="re" role="alert"></div>
-<div class="acts"><button class="btn" onclick="save()" data-write disabled>${id?'Guardar cambios':'Guardar partida'}</button><a class="btn ghost" href="#/partidas">Cancelar</a></div></div>`}
-function setN(n){F.n=n;while(F.rows.length<n)F.rows.push({pid:0,vp:''});F.rows.length=n;rows()}
-function rows(){const used=F.rows.map(r=>r.pid);$('fr').innerHTML=F.rows.map((r,i)=>`<div class="fr"><select aria-label="Jugador ${i+1}" onchange="F.rows[${i}].pid=+this.value;rows()"><option value="0">Jugador ${i+1}</option>${M.players.map(p=>`<option value="${p.id}" ${p.id==r.pid?'selected':''} ${used.includes(p.id)&&p.id!=r.pid?'disabled':''}>${p.name}</option>`).join('')}</select><input type="number" min="0" max="30" inputmode="numeric" aria-label="Puntos de victoria ${i+1}" placeholder="PV" value="${r.vp}" oninput="F.rows[${i}].vp=this.value;pv()"></div>`).join('');pv()}
-function resolve(){const S=F.rows.filter(r=>r.pid&&r.vp!=='').map(r=>({...r,vp:+r.vp})).sort((a,b)=>b.vp-a.vp),out=[],ties=[];let i=0;
- while(i<S.length){let j=i;while(j+1<S.length&&S[j+1].vp==S[i].vp)j++;const G=S.slice(i,j+1);
-  if(G.length==1)out.push({...G[0],pos:i+1});else{const ps=G.map(r=>F.tie[r.pid]),ok=ps.every(p=>p>=i+1&&p<=j+1)&&new Set(ps).size==G.length;ties.push({G,lo:i+1,hi:j+1,ok});G.forEach(r=>out.push({...r,pos:ok?F.tie[r.pid]:null}))}i=j+1}
- return{out:out.sort((a,b)=>(a.pos||99)-(b.pos||99)),ties,ok:ties.every(t=>t.ok)}}
-function pv(){const z=resolve();$('pv').innerHTML=z.ties.filter(t=>!t.ok).map(t=>`<div class="tie"><b>Empate a ${t.G[0].vp} PV entre ${t.G.map(r=>pname(r.pid)).join(' y ')}.</b><span>Indica el puesto final de cada jugador empatado.</span><div>${t.G.map(r=>`<label>${pname(r.pid)}<select onchange="F.tie[${r.pid}]=+this.value;pv()"><option value="0">Puesto…</option>${Array.from({length:t.hi-t.lo+1},(_,k)=>t.lo+k).map(p=>`<option ${F.tie[r.pid]==p?'selected':''}>${p}</option>`).join('')}</select></label>`).join('')}</div></div>`).join('')
- +`<div class="meta" style="margin-top:8px">${z.out.filter(r=>r.pos).map(r=>`<span>${r.pos}º ${pname(r.pid)}: ${f(scoreAmigos(F.n,r.pos))} Score Amigos</span>`).join('')}</div>`}
-async function save(){if(!requireBackend())return;const R=F.rows,err=m=>{$("re").textContent=m};
- if(!F.seasonId)return err("Selecciona la temporada.");if(!F.date)return err("Indica la fecha.");
- if(R.some(r=>!r.pid))return err("Selecciona todos los jugadores.");if(new Set(R.map(r=>r.pid)).size<R.length)return err("Un jugador no puede aparecer dos veces.");
- if(R.some(r=>r.vp===""||+r.vp<0||!Number.isInteger(+r.vp)))return err("Introduce los puntos de victoria de cada jugador.");
- const z=resolve();if(!z.ok)return err("Hay empates a PV sin resolver. Indica el puesto final de cada jugador empatado.");
- const g={seasonId:F.seasonId,date:F.date,results:z.out.map(r=>({playerId:r.pid,position:r.pos,vp:r.vp}))};
- try{F.id?await Repo.updateGame(F.id,g):await Repo.createGame(g);await load();state.f=0;toast(F.id?"Partida actualizada":"Partida guardada");location.hash="#/partidas"}catch(e){reportFailure(e)}}
-function askDel(id){if(!requireBackend())return;const go=async()=>{try{await Repo.deleteGame(id);await load();toast("Partida eliminada");route()}catch(e){reportFailure(e)}};if(!$("dlg").showModal)return confirm("¿Eliminar esta partida? Esta acción eliminará los resultados de todos los jugadores.")&&go();$("dok").onclick=()=>{$("dlg").close();go()};$("dlg").showModal()}
-
-/* ---------- 6. ESTADO Y RUTAS ---------- */
-/* ---------- 6. ESTADO, RUTAS Y ANIMACIÓN ---------- */
-let _k='';const setF=v=>{state.f=v;route()},setSeason=v=>{state.season=v;state.f=v;route()};
-function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2600)}
-function anim(){const rm=matchMedia('(prefers-reduced-motion:reduce)').matches;document.querySelectorAll('[data-c]').forEach(e=>{const t=+e.dataset.c,d=+e.dataset.d,s=performance.now(),fin=()=>e.textContent=fx(t,d);if(rm)return fin();(function k(n){const p=Math.min((n-s)/1100,1);e.textContent=fx(t*(1-Math.pow(1-p,3)),d);p<1?requestAnimationFrame(k):fin()})(s)})}
-function route(){const h=(location.hash||'#/').slice(2),[p,a]=h.split('/'),id=+a,a0=$('app'),R={'':home,temporadas:seasons,historico:historical,partidas:games,estadisticas:stats,jugadores:players,reglas:rules};
- a0.innerHTML=p=='jugador'?player(id):p=='registrar'?reg(0):p=='editar'?reg(id):(R[p]||home)();a0.classList.remove('fd');void a0.offsetWidth;a0.classList.add('fd');
- $('seg').innerHTML=M.seasons.map(s=>`<option value="${s.id}" ${s.id==state.season?'selected':''}>${s.name}</option>`).join('');
- const key=p=='jugador'?'jugadores':p=='editar'?'partidas':p=='historico'?'historico':R[p]||p=='registrar'?p:'';document.querySelectorAll('#nav a').forEach(l=>l.classList.toggle('on',l.getAttribute('href').slice(2)==key));
- if((p=='registrar'||p=='editar')&&F)rows();document.querySelectorAll('button[data-write]').forEach(b=>b.disabled=!databaseOnline);anim();const k=h.split('?')[0];if(k!=_k)scrollTo(0,0);_k=k}
-addEventListener('hashchange',route);window.addEventListener('offline',()=>setStatus(false));window.addEventListener('online',()=>{setStatus(false,'Verificando Supabase…');load().then(route).catch(e=>{console.error(e);setStatus(false)})});load().then(route).catch(e=>{console.error(e);setStatus(false);$('app').innerHTML='<section class="hero"><h1>CATAN AMIGOS</h1><p>Sin conexión con Supabase. No se ha guardado ningún dato. Comprueba la conexión y vuelve a cargar la página.</p></section>'});
-</script></body></html>
+  <dialog id="dlg-admin">
+    <h2>Acceso de administrador</h2>
+    <p class="sub">Te llega un enlace al correo. Solo una cuenta con permiso puede borrar temporadas.</p>
+    <label class="field">Correo
+      <input id="aemail" type="email" autocomplete="email" inputmode="email">
+    </label>
+    <p class="err" id="aerr" role="alert"></p>
+    <div class="acts">
+      <button type="button" class="btn-quiet" data-act="close-dialog">Cancelar</button>
+      <button type="button" class="btn" data-act="send-admin">Enviar enlace</button>
+    </div>
+  </dialog>
+  <script type="module" src="js/app.js"></script>
+  <noscript><p style="padding:24px">Catan Amigos necesita JavaScript para anotar la partida.</p></noscript>
+</body>
+</html>
